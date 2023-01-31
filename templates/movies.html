@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+</head>
+<style>
+    li{
+        margin-left: 45px;
+    }
+</style>
+<script>
+    
+</script>
+<body>
+    {% block nav_bar %}
+        {{ super() }}
+    {% endblock %}
+    {% block main_content %}
+    <div>
+        <h1>Movie List:</h1>
+        {% block content %}
+            {% for movie in movies %}
+            <form method="post" action="/picked_movies">
+                <ul>
+                    <h2>{{movie.title}}</h2>
+                    <li>{{movie.plot}}</li>
+                    <li>{{movie.id}}</li>
+                    <li><img src="{{movie.img_src}}" alt="Missing movie image"></li>
+                        <input type="checkbox" name="title" id="movie" value="{{movie.title}}">
+                </ul>
+            {% endfor %}
+                <input type="submit" value="Add">  
+            </form>      
+        {% endblock %}
+    </div>
+    {% endblock %}
+</body>
+</html>
