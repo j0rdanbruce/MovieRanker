@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actor search</title>
+</head>
+<style></style>
+<script></script>
+<body>
+    {% block nav_bar %}
+        {{ super() }}
+    {% endblock %}
+    {% block main_content %}
+    <div>
+        <h1>Actor List:</h1>
+        {% block content %}
+            {% for actor in actors %}
+                <ul>
+                    <h2>{{actor.actor_name}}</h2>
+                    <li><b>Actor ID:</b>{{actor.actor_id}}</li>
+                    <li><b>Popularity Rating:</b>{{actor.popularity}}</li>
+                    <li><img src="{{actor.img_src}}" alt="Missing actor image"></li>
+                </ul>
+            {% endfor %}        
+        {% endblock %}
+    </div>
+    {% endblock %}
+
+    {% block footer %}
+    {% endblock %}
+</body>
+</html>

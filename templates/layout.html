@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    .flex-container{
+        display: flex;
+        flex-direction: row;
+    }
+    #nav-links{
+        list-style-type: none;
+        padding: 10px;
+        margin: 0px;
+        margin-top: 30px;
+        border: solid black 3px;
+        border-radius: 10px;
+        width: 200px;
+        margin-left: 0px;
+        background-color: lightgray;
+    }
+    #top-navbar{
+        
+    }
+    li a{
+        text-decoration: none;
+        display: block;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        width: 200px;
+    }
+    li a:hover {
+        background-color: #555;
+        color: white;
+    }
+    #main-content{
+        width: 500;
+        float: left;
+        margin: 0;
+        padding: 0;
+        display: inline;     
+    }
+</style>
+<script></script>
+<body>
+    <div class="flex-container">
+        {% block nav_bar %}
+        <div id="nav-bar">
+            <ul id="nav-links">
+                <li><a href="#">Search for Movies</a></li>
+                <li><a href="#">Search for Actors</a></li>
+                <li><a href="#">Public Movie Forum</a></li>
+            </ul>
+        </div>
+        <div id="top-navbar">
+            <ul>
+                <li><a href="#">Login</a></li>
+            </ul>
+        </div>
+        {% endblock %}
+        {% block main_content %}
+            <div id="main-content"></div>
+        {% endblock %}
+        {% block footer %}
+            <div class="footer"></div>
+        {% endblock %}
+    </div>
+    
+    
+</body>
+</html>
