@@ -1,4 +1,4 @@
-import uuid
+import uuid, json
 from flask import request, render_template
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
@@ -42,11 +42,18 @@ class Movie(MethodView):
     def put(self, movie_id):
         pass
 
-
+#reutrn string dictionary of picked movies. this is not optimal. sending dictionary from html in string form. fix later.
 @blp.route("/picked_movies", methods=["POST"])
 def get_picked_movies():
-    movie_title = request.form.getlist("title")
-    return movie_title
+    if request.method == "POST":
+        movie_data = request.form.getlist("movie")
+        for movie in movie_data:
+            movie = json.loads(movie.replace('\'', '\"'))
+            return movie
+        #return movie_data
+    else:
+        return {"message": "unsuccessful attempt"}
+    
 
 #TMDB Api calls here
 @blp.route("/movies/<string:movie_name>")
