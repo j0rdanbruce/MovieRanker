@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <h1>Create an Account</h1>
+  <form action="" method="post">
+    {{ form.hidden_tag() }}
+    <div id="username-field">{{ form.username(placeholder='username') }}</div>
+    <div id="email-field">{{ form.email(placeholder='email') }}</div>
+    <div id="password-field">{{ form.password1(placeholder='password') }}</div>
+    <div id="confirm-password-field">{{ form.password2(placeholder='confirm password') }}</div>
+    <div id="submit">{{ form.submit() }}</div>
+  </form>
+    
+  
+  <div></div>
+</body>
+</html>

@@ -14,7 +14,16 @@
     }
 </style>
 <script>
-    
+	/*window.onload=function(){         //window.onload fixed my issue of console logging form data.
+    const form = document.querySelector('#movie-selection')
+      form.addEventListener('submit', event => {
+      event.preventDefault();
+      const formData = new FormData(form);
+      formData.append('movie')
+			console.log('here')
+      console.log(formData);
+    });
+  }*/
 </script>
 <body>
     {% block nav_bar %}
@@ -25,16 +34,16 @@
         <h1>Movie List:</h1>
         {% block content %}
             {% for movie in movies %}
-            <form method="post" action="/picked_movies">
+            <form id="movie-selection" method="post" action="{{ url_for('movies.get_picked_movies') }}">
                 <ul>
                     <h2>{{movie.title}}</h2>
                     <li>{{movie.plot}}</li>
                     <li>{{movie.id}}</li>
                     <li><img src="{{movie.img_src}}" alt="Missing movie image"></li>
-                        <input type="checkbox" name="title" id="movie" value="{{movie.title}}">
+                        <input type="checkbox" name="movie" id="movie" value="{{movie}}">
                 </ul>
             {% endfor %}
-                <input type="submit" value="Add">  
+                <button type="submit" value="Add Movies">Submit</button>
             </form>      
         {% endblock %}
     </div>
