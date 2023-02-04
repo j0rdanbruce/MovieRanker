@@ -2,6 +2,7 @@ import os
 
 from flask import Flask, render_template, request
 from flask_smorest import Api
+from flask_login import LoginManager
 
 from db import db
 import models
@@ -10,9 +11,9 @@ from resources.movie import blp as MovieBlueprint
 from resources.tv import blp as ShowBlueprint
 from resources.actor import blp as ActorBlueprint
 from resources.other import blp as OtherBlueprint
-from resources.login import blp as LoginBluePrint
+from resources.user import blp as UserBlueprint
 
-from secret import SECRET_API_KEY
+from secret import SECRET_API_KEY, SECRET_KEY
 
 def create_app(db_url=None):
 
@@ -27,10 +28,11 @@ def create_app(db_url=None):
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
     app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["SECRET_KEY"] = SECRET_KEY
 
     db.init_app(app)
     api = Api(app)
-
+    
     with app.app_context():
         db.create_all()
 
@@ -38,7 +40,15 @@ def create_app(db_url=None):
     api.register_blueprint(ShowBlueprint)
     api.register_blueprint(ActorBlueprint)
     api.register_blueprint(OtherBlueprint)
-    api.register_blueprint(LoginBluePrint)
+    api.register_blueprint(UserBlueprint)
+
+    #configuring a login manager for User Authintication purposes
+    login_manager = LoginManager()
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(user_id):
+        return models.User.get(user_id)
 
     return app
 
