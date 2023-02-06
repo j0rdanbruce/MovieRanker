@@ -1,12 +1,15 @@
 import uuid, json
-from flask import request, render_template
+from flask import request, render_template, redirect, url_for
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
+
+from flask_login import current_user
 
 import urllib.request, json, urllib.error
 from secret import SECRET_API_KEY
 
-from db import movies
+from db import db, movies
+from models import FaveMovies
 
 from schemas import PlainMovieSchema
 
@@ -49,8 +52,12 @@ def get_picked_movies():
         movie_data = request.form.getlist("movie")
         for movie in movie_data:
             movie = json.loads(movie.replace('\'', '\"'))
-            return movie
-        #return movie_data
+            movie_pick = FaveMovies(title=movie['title'], picture_url=movie['img_src'], 
+                                    plot=movie['plot'], movie_id=int(movie['id']), 
+                                    user_id=current_user.id)
+            db.session.add(movie_pick)
+            db.session.commit()
+        return redirect(url_for('user.home_page'))
     else:
         return {"message": "unsuccessful attempt"}
     
