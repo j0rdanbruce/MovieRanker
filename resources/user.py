@@ -15,7 +15,7 @@ blp = Blueprint("user", __name__, description="operations for login")
 
 @blp.route("/register", methods=["POST", "GET"])
 #register for an account
-def post():
+def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = UserModel(username=form.username.data, email=form.email.data)
