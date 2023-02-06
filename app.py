@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template, request
+from flask import Flask
 from flask_smorest import Api
 from flask_login import LoginManager
 
@@ -15,42 +15,42 @@ from resources.user import blp as UserBlueprint
 
 from secret import SECRET_API_KEY, SECRET_KEY
 
-def create_app(db_url=None):
 
-    app = Flask(__name__)
 
-    app.config["PROPAGATE_EXCEPTIONS"] = True
-    app.config["API_TITLE"] = "Stores REST API"
-    app.config["API_VERSION"] = "v1"
-    app.config["OPENAPI_VERSION"] = "3.0.3"
-    app.config["OPENAPI_URL_PREFIX"] = "/"
-    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
-    app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SECRET_KEY"] = SECRET_KEY
+app = Flask(__name__)
 
-    db.init_app(app)
-    api = Api(app)
+app.config["PROPAGATE_EXCEPTIONS"] = True
+app.config["API_TITLE"] = "MovieRanker REST API"
+app.config["API_VERSION"] = "v1"
+app.config["OPENAPI_VERSION"] = "3.0.3"
+app.config["OPENAPI_URL_PREFIX"] = "/"
+app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///data.db")
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config["SECRET_KEY"] = SECRET_KEY
+
+db.init_app(app)
+api = Api(app)
+
+with app.app_context():
+    db.create_all()
+
+api.register_blueprint(MovieBlueprint)
+api.register_blueprint(ShowBlueprint)
+api.register_blueprint(ActorBlueprint)
+api.register_blueprint(OtherBlueprint)
+api.register_blueprint(UserBlueprint)
+
+#configuring a login manager for User Authintication purposes
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return models.UserModel.query.get(int(user_id))
+
     
-    with app.app_context():
-        db.create_all()
-
-    api.register_blueprint(MovieBlueprint)
-    api.register_blueprint(ShowBlueprint)
-    api.register_blueprint(ActorBlueprint)
-    api.register_blueprint(OtherBlueprint)
-    api.register_blueprint(UserBlueprint)
-
-    #configuring a login manager for User Authintication purposes
-    login_manager = LoginManager()
-    login_manager.init_app(app)
-
-    @login_manager.user_loader
-    def load_user(user_id):
-        return models.User.get(user_id)
-
-    return app
 
 '''@app.route("/")
 def index():
