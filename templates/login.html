@@ -6,6 +6,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
 </head>
+<style>
+  #register-here a:hover{
+    color: magenta;
+  }
+</style>
 
 <script>
   window.onload=function(){         //window.onload fixed my issue of console logging form data.
@@ -21,6 +26,10 @@
 </script>
 
 <body>
+  <div id="register-here">
+    <h3><a href="{{ url_for('user.register') }}">Create another account here</a></h3>
+  </div>
+  
   <form action="" method="post">
     {{ form.hidden_tag() }}
     <div>
@@ -36,6 +45,10 @@
       {% endfor %}
     </div>
     <div>{{ form.submit() }}</div>
+    <br>
+    {% for message in get_flashed_messages() %}
+      <strong style="color: red;">{{ message }}</strong>
+    {% endfor %}
   </form>
 </body>
 </html>

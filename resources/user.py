@@ -15,7 +15,7 @@ blp = Blueprint("user", __name__, description="operations for login")
 
 @blp.route("/register", methods=["POST", "GET"])
 #register for an account
-def post():
+def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = UserModel(username=form.username.data, email=form.email.data)
@@ -24,7 +24,7 @@ def post():
         db.session.commit()
         return redirect(url_for("user.login"))
     return render_template("registration.html", form=form)
-
+#login to your account
 @blp.route("/login", methods=["POST", "GET"])
 def login_here():
     form = LoginForm()
@@ -32,19 +32,25 @@ def login_here():
         user = UserModel.query.filter_by(email=form.email.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user)
-            return "Your are now logged in"
+            return redirect(url_for('user.home_page'))
         flash("Incorrect username or password")
     return render_template("login.html", form=form)
-
+#logout of your account
 @blp.route("/logout", methods=["GET"])
 @login_required
 def logout():
     logout_user()
-    return "You are now logged out"
+    return redirect(url_for("user.login"))
+
+#returns home page of the logged in user
+@blp.route("/home", methods=["GET"])
+def home_page():
+    return render_template("home_page.html")
 
 
-@blp.route("/users", methods=["GET"])
-@blp.response(200, PlainUserSchema(many=True))
-def get_all_users():
-    users = UserModel.query.all()
-    return users
+@blp.route("/users")
+class User(MethodView):
+    @blp.response(200, PlainUserSchema(many=True))
+    def get(self):
+        users = UserModel.query.all()
+        return users
