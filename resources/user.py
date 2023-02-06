@@ -32,7 +32,7 @@ def login_here():
         user = UserModel.query.filter_by(email=form.email.data).first()
         if user is not None and user.check_password(form.password.data):
             login_user(user)
-            return "Your are now logged in"
+            return redirect(url_for('user.home_page'))
         flash("Incorrect username or password")
     return render_template("login.html", form=form)
 
@@ -41,6 +41,11 @@ def login_here():
 def logout():
     logout_user()
     return "You are now logged out"
+
+@blp.route("/home", methods=["GET"])
+def home_page():
+    return render_template("home_page.html")
+
 
 
 @blp.route("/users", methods=["GET"])
