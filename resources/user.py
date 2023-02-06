@@ -47,9 +47,9 @@ def home_page():
     return render_template("home_page.html")
 
 
-
-@blp.route("/users", methods=["GET"])
-@blp.response(200, PlainUserSchema(many=True))
-def get_all_users():
-    users = UserModel.query.all()
-    return users
+@blp.route("/users")
+class User(MethodView):
+    @blp.response(200, PlainUserSchema(many=True))
+    def get(self):
+        users = UserModel.query.all()
+        return users
