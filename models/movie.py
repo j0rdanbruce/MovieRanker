@@ -8,3 +8,6 @@ class FaveMovies(db.Model):
     rank = db.Column(db.Integer, nullable=True)
     picture_url = db.Column(db.String, nullable=True)
     movie_id = db.Column(db.Integer, nullable=False, unique=True)
+    user_id = db.Column(db.ForeignKey("user.id"), nullable=False, unique=False)
+
+    user = db.relationship("UserModel", back_populates="fave_movies")
