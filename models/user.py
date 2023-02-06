@@ -18,3 +18,5 @@ class UserModel(UserMixin, db.Model):
     
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    fave_movies = db.relationship("FaveMovies", back_populates="user", lazy="dynamic", cascade="all, delete")
