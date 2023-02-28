@@ -4,7 +4,7 @@ from datetime import datetime
 
 from  werkzeug.security import generate_password_hash, check_password_hash
 
-class UserModel(UserMixin, db.Model):
+'''class UserModel(UserMixin, db.Model):
     __tablename__ = "user"
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), index=True, unique=True, nullable=False)
@@ -19,4 +19,4 @@ class UserModel(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    fave_movies = db.relationship("FaveMovies", back_populates="user", lazy="dynamic", cascade="all, delete")
+    fave_movies = db.relationship("FaveMovies", back_populates="user", lazy="dynamic", cascade="all, delete")'''
