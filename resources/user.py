@@ -6,14 +6,14 @@ from flask import render_template, flash, redirect, url_for, request
 from forms import RegistrationForm, LoginForm
 from flask_login import login_user, current_user, login_required, logout_user
 
-#from db import db
-#from models import UserModel
+from db import db
+from models import UserModel
 
 from schemas import PlainUserSchema
 
 blp = Blueprint("user", __name__, description="operations for login")
 
-'''@blp.route("/register", methods=["POST", "GET"])
+@blp.route("/register", methods=["POST", "GET"])
 #register for an account
 def register():
     form = RegistrationForm()
@@ -23,7 +23,7 @@ def register():
         db.session.add(user)
         db.session.commit()
         return redirect(url_for("user.login"))
-    return render_template("registration.html", form=form)'''
+    return render_template("registration.html", form=form)
 #login to your account
 @blp.route("/login", methods=["POST", "GET"])
 def login_here():
