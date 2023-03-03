@@ -25,7 +25,7 @@ def register():
         return redirect(url_for("user.login"))
     return render_template("registration.html", form=form)'''
 #login to your account
-@blp.route("/login", methods=["POST", "GET"])
+'''@blp.route("/login", methods=["POST", "GET"])
 def login_here():
     form = LoginForm()
     if form.validate_on_submit():
@@ -34,7 +34,7 @@ def login_here():
             login_user(user)
             return redirect(url_for('user.home_page'))
         flash("Incorrect username or password")
-    return render_template("login.html", form=form)
+    return render_template("login.html", form=form)'''
 #logout of your account
 @blp.route("/logout", methods=["GET"])
 @login_required

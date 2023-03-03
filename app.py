@@ -34,11 +34,11 @@ app.config['MYSQL_DB'] = 'jeb79'
 app.config["SECRET_KEY"] = SECRET_KEY
 
 mysql = MySQL(app)
-mysql.init_app(app)
+#mysql.init_app(app)
 api = Api(app)
 
-with app.app_context():
-    cur = mysql.connection.cursor()
+'''with app.app_context():
+    cur = mysql.connection.cursor()'''
 
 
 api.register_blueprint(MovieBlueprint)
@@ -57,7 +57,16 @@ def load_user(user_id):
 
 #query = '''CREATE TABLE Person(PersonID int, LastName varchar(255));'''
 #conn = db.connect()
-cur = mysql.connection.cursor()
-cur.execute('''CREATE TABLE Person(PersonID INTEGER, LastName VARCHAR(25))''')
-mysql.connection.commit()
-cur.close()
+#cur = mysql.connection.cursor()
+#cur.execute("CREATE TABLE person (id INT PRIMARY KEY, LastName VARCHAR(25))")
+#mysql.connection.commit()
+#cur.close()
+
+@app.route('/database')
+def index():
+    cur = mysql.connection.cursor()
+    query = "CREATE TABLE person (id INT PRIMARY KEY, LastName VARCHAR(25))"
+    cur.execute(query)
+    mysql.connection.commit()
+    cur.close()
+    return 'done'
