@@ -55,17 +55,10 @@ login_manager.init_app(app)
 def load_user(user_id):
     return models.UserModel.query.get(int(user_id))'''
 
-#query = '''CREATE TABLE Person(PersonID int, LastName varchar(255));'''
-#conn = db.connect()
-#cur = mysql.connection.cursor()
-#cur.execute("CREATE TABLE person (id INT PRIMARY KEY, LastName VARCHAR(25))")
-#mysql.connection.commit()
-#cur.close()
-
 @app.route('/database')
 def index():
     cur = mysql.connection.cursor()
-    query = "CREATE TABLE person (id INT PRIMARY KEY, LastName VARCHAR(25))"
+    query = "CREATE TABLE  IF NOT EXISTS Person (id INT PRIMARY KEY, LastName VARCHAR(25))"
     cur.execute(query)
     mysql.connection.commit()
     cur.close()
