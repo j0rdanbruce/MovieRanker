@@ -4,10 +4,10 @@ from flask import Flask
 from flask_smorest import Api
 from flask_login import LoginManager
 
-#from db import db
-#import models
+from db import mysql
+from models.user import User
 
-from flask_mysqldb import MySQL
+#from flask_mysqldb import MySQL
 
 from resources.movie import blp as MovieBlueprint
 from resources.tv import blp as ShowBlueprint
@@ -33,8 +33,8 @@ app.config['MYSQL_PASSWORD'] = 'Shumai123!'
 app.config['MYSQL_DB'] = 'jeb79'
 app.config["SECRET_KEY"] = SECRET_KEY
 
-mysql = MySQL(app)
-#mysql.init_app(app)
+#mysql = MySQL(app)
+mysql.init_app(app)
 api = Api(app)
 
 '''with app.app_context():
@@ -51,11 +51,11 @@ api.register_blueprint(UserBlueprint)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-'''@login_manager.user_loader
+@login_manager.user_loader
 def load_user(user_id):
-    return models.UserModel.query.get(int(user_id))'''
+    return User.get_id(user_id)
 
-@app.route('/database')
+'''@app.route('/database')
 def index():
     cur = mysql.connection.cursor()
     query = "CREATE TABLE  IF NOT EXISTS Person (id INT PRIMARY KEY, LastName VARCHAR(25))"
@@ -63,3 +63,4 @@ def index():
     mysql.connection.commit()
     cur.close()
     return 'done'
+'''

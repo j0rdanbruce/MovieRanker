@@ -1,8 +1,8 @@
-from flask_sqlalchemy import SQLAlchemy
-#from flask_mysqldb import MySQL
+#from flask_sqlalchemy import SQLAlchemy
+from flask_mysqldb import MySQL
 
 #db = SQLAlchemy()
-#db = MySQL()
+mysql = MySQL()
 
 movies = {}
 shows = {}

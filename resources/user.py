@@ -6,8 +6,8 @@ from flask import render_template, flash, redirect, url_for, request
 from forms import RegistrationForm, LoginForm
 from flask_login import login_user, current_user, login_required, logout_user
 
-#from db import db
-#from models import UserModel
+from db import mysql
+from models.user import User
 
 from schemas import PlainUserSchema
 
@@ -25,16 +25,16 @@ def register():
         return redirect(url_for("user.login"))
     return render_template("registration.html", form=form)'''
 #login to your account
-'''@blp.route("/login", methods=["POST", "GET"])
+@blp.route("/login", methods=["POST", "GET"])
 def login_here():
     form = LoginForm()
     if form.validate_on_submit():
-        user = UserModel.query.filter_by(email=form.email.data).first()
+        user = User.get_user(form.email.data)
         if user is not None and user.check_password(form.password.data):
             login_user(user)
             return redirect(url_for('user.home_page'))
         flash("Incorrect username or password")
-    return render_template("login.html", form=form)'''
+    return render_template("login.html", form=form)
 #logout of your account
 @blp.route("/logout", methods=["GET"])
 @login_required
@@ -54,3 +54,12 @@ class User(MethodView):
     def get(self):
         users = UserModel.query.all()
         return users'''
+
+@blp.route('/database')
+def index():
+    cur = mysql.connection.cursor()
+    query = "CREATE TABLE  IF NOT EXISTS Person (id INT PRIMARY KEY, LastName VARCHAR(25))"
+    cur.execute(query)
+    mysql.connection.commit()
+    cur.close()
+    return 'done'
