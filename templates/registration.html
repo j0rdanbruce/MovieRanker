@@ -10,6 +10,8 @@
   <h1>Create an Account</h1>
   <form action="" method="post">
     {{ form.hidden_tag() }}
+    <div id="fname-field">{{ form.fname(placeholder='first name') }}</div>
+    <div id="lname-field">{{ form.lname(placeholder='last name') }}</div>
     <div id="username-field">{{ form.username(placeholder='username') }}</div>
     <div id="email-field">{{ form.email(placeholder='email') }}</div>
     <div id="password-field">{{ form.password1(placeholder='password') }}</div>
@@ -20,7 +22,6 @@
 <br>
   <h3><a href="{{ url_for('user.login_here') }}">Already have an account?</a></h3>
     
-  
   <div></div>
 </body>
 </html>

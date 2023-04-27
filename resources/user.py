@@ -9,27 +9,27 @@ from flask_login import login_user, current_user, login_required, logout_user
 from db import mysql
 from models.user import User
 
-from schemas import PlainUserSchema
+#from schemas import PlainUserSchema
 
 blp = Blueprint("user", __name__, description="operations for login")
 
-'''@blp.route("/register", methods=["POST", "GET"])
+@blp.route("/register", methods=["POST", "GET"])
 #register for an account
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = UserModel(username=form.username.data, email=form.email.data)
+        user = User(email=form.email.data, password=form.password1.data)
         user.set_password(form.password1.data)
-        db.session.add(user)
-        db.session.commit()
+        user.insert_user(form.fname.data, form.lname.data, form.email.data, form.username.data)
         return redirect(url_for("user.login"))
-    return render_template("registration.html", form=form)'''
+    return render_template("registration.html", form=form)
 #login to your account
 @blp.route("/login", methods=["POST", "GET"])
 def login_here():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User.get_user(form.email.data)
+        user = User(form.email.data, form.password.data)
+        #user.get_user(form.email.data)
         if user is not None and user.check_password(form.password.data):
             login_user(user)
             return redirect(url_for('user.home_page'))
@@ -44,6 +44,7 @@ def logout():
 
 #returns home page of the logged in user
 @blp.route("/home", methods=["GET"])
+@login_required
 def home_page():
     return render_template("home_page.html")
 

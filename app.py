@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask import session
 from flask_smorest import Api
 from flask_login import LoginManager
 
@@ -49,6 +50,7 @@ api.register_blueprint(UserBlueprint)
 
 #configuring a login manager for User Authintication purposes
 login_manager = LoginManager()
+login_manager.login_view = 'user.login_here'
 login_manager.init_app(app)
 
 @login_manager.user_loader
