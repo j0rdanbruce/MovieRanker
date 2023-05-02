@@ -5,7 +5,8 @@ from  werkzeug.security import generate_password_hash, check_password_hash
 from forms import RegistrationForm
 
 class User(UserMixin):
-    def __init__(self, email, password):
+    def __init__(self, id, email, password):
+        self.id = id
         self.email = email
         self.password = password
     
@@ -16,8 +17,7 @@ class User(UserMixin):
         user = cur.fetchone()
         cur.close()
         if user:
-            id = user[0]
-            return str(user)
+            return User(id=user[0], email=user[4], password=user[5])
     
     def insert_user(self, fname, lname, email, username):
         cur = mysql.connection.cursor()
@@ -28,12 +28,12 @@ class User(UserMixin):
 
     def get_id(user_id):
         cur = mysql.connection.cursor()
-        query = "SELECT id FROM user WHERE id='{}'".format(user_id)
+        query = "SELECT * FROM user WHERE id='{}'".format(user_id)
         cur.execute(query)
-        user_id = cur.fetchone()
+        user = cur.fetchone()
         cur.close()
-        if user_id:
-            return str(user_id)
+        if user:
+            return User(user[4], user[5])
 
     def set_password(self, password):
         form = RegistrationForm()

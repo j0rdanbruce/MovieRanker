@@ -28,8 +28,8 @@ def register():
 def login_here():
     form = LoginForm()
     if form.validate_on_submit():
-        user = User(form.email.data, form.password.data)
-        #user.get_user(form.email.data)
+        #user = User(form.email.data, form.password.data)
+        user = User.get_user(form.email.data)
         if user is not None and user.check_password(form.password.data):
             login_user(user)
             return redirect(url_for('user.home_page'))
