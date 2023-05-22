@@ -1,9 +1,9 @@
 import os
 
 from flask import Flask
-from flask import session
 from flask_smorest import Api
-from flask_login import LoginManager
+from flask import session
+from flask_session import Session
 
 from db import mysql
 from models.user import User
@@ -32,14 +32,19 @@ app.config["MYSQL_HOST"] = 'sql.njit.edu'
 app.config['MYSQL_USER'] = 'jeb79'
 app.config['MYSQL_PASSWORD'] = 'Shumai123!'
 app.config['MYSQL_DB'] = 'jeb79'
+app.config["MYSQL_CURSORCLASS"] = 'DictCursor'
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = SECRET_KEY
 
-#mysql = MySQL(app)
 mysql.init_app(app)
 api = Api(app)
 
 '''with app.app_context():
     cur = mysql.connection.cursor()'''
+
+#initializing session manager to flask app
+Session(app)
 
 
 api.register_blueprint(MovieBlueprint)
@@ -48,21 +53,3 @@ api.register_blueprint(ActorBlueprint)
 api.register_blueprint(OtherBlueprint)
 api.register_blueprint(UserBlueprint)
 
-#configuring a login manager for User Authintication purposes
-login_manager = LoginManager()
-login_manager.login_view = 'user.login_here'
-login_manager.init_app(app)
-
-@login_manager.user_loader
-def load_user(user_id):
-    return User.get_id(user_id)
-
-'''@app.route('/database')
-def index():
-    cur = mysql.connection.cursor()
-    query = "CREATE TABLE  IF NOT EXISTS Person (id INT PRIMARY KEY, LastName VARCHAR(25))"
-    cur.execute(query)
-    mysql.connection.commit()
-    cur.close()
-    return 'done'
-'''

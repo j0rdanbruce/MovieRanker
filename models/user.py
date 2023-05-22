@@ -1,28 +1,28 @@
 from db import mysql
-from flask_login import UserMixin
-from flask import flash
+from flask import flash, session, render_template
 from  werkzeug.security import generate_password_hash, check_password_hash
 from forms import RegistrationForm
 
-class User(UserMixin):
-    def __init__(self, id, email, password):
-        self.id = id
+class User:
+    def __init__(self, username=None, email=None, pswrd=None):
         self.email = email
-        self.password = password
+        self.pswrd = pswrd
+        self.username = username
     
-    def get_user(self, email):
+    def add_to_session(self):
         cur = mysql.connection.cursor()
-        query = "SELECT * FROM user WHERE email='{}'".format(email)
+        query = "SELECT * FROM user WHERE email='{}' AND pwrd_hash='{}'".format(self.email, self.pswrd)
         cur.execute(query)
         user = cur.fetchone()
         cur.close()
         if user:
-            return User(id=user[0], email=user[4], password=user[5])
+            session["id"] = user["id"]
+            return render_template("/home_page.html")
     
-    def insert_user(self, fname, lname, email, username):
+    def insert_user(self, fname, lname):
         cur = mysql.connection.cursor()
         query = "INSERT INTO user(fname, lname, email, username, pwrd_hash) VALUES(%s, %s, %s, %s, %s)"
-        cur.execute(query, (fname, lname, email, username, self.password_hash))
+        cur.execute(query, (fname, lname, self.email, self.username, self.pswrd))
         mysql.connection.commit()
         cur.close()
 
@@ -49,3 +49,7 @@ class User(UserMixin):
         pwrd_hash = cur.fetchone()
         cur.close()
         return True
+    
+    def is_authenticated(self):
+        if session["id"] is not None:
+            return True

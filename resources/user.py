@@ -2,9 +2,8 @@ import json
 
 from flask_smorest import Blueprint
 from flask.views import MethodView
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, session, request
 from forms import RegistrationForm, LoginForm
-from flask_login import login_user, current_user, login_required, logout_user
 
 from db import mysql
 from models.user import User
@@ -18,34 +17,32 @@ blp = Blueprint("user", __name__, description="operations for login")
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data, password=form.password1.data)
-        user.set_password(form.password1.data)
-        user.insert_user(form.fname.data, form.lname.data, form.email.data, form.username.data)
-        return redirect(url_for("user.login"))
+        user = User(username=form.username.data, email=form.email.data, pswrd=form.password1.data)
+        #user.set_password(form.password1.data)
+        user.insert_user(form.fname.data, form.lname.data)
+        return redirect(url_for("user.login_here"))
     return render_template("registration.html", form=form)
 #login to your account
 @blp.route("/login", methods=["POST", "GET"])
-def login_here():
+def login():
     form = LoginForm()
     if form.validate_on_submit():
-        #user = User(form.email.data, form.password.data)
-        user = User.get_user(form.email.data)
-        if user is not None and user.check_password(form.password.data):
-            login_user(user)
-            return redirect(url_for('user.home_page'))
+        user = User(email=form.email.data, pswrd=form.password.data)
+        user.add_to_session()
+        if user.is_authenticated():
+            return redirect(url_for("user.home_page"))
         flash("Incorrect username or password")
     return render_template("login.html", form=form)
 #logout of your account
 @blp.route("/logout", methods=["GET"])
-@login_required
 def logout():
-    logout_user()
+    session["id"] = None
     return redirect(url_for("user.login"))
 
 #returns home page of the logged in user
 @blp.route("/home", methods=["GET"])
-@login_required
 def home_page():
+    
     return render_template("home_page.html")
 
 

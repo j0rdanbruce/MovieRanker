@@ -3,7 +3,7 @@ create table if not exists user(
     fname varchar(50) not null,
     lname varchar(50) not null,
     username varchar(50) unique,
-    email varchar(80) not null unique,
+    email varchar(80) not null,
     pwrd_hash varchar(150) not null unique,
     created timestamp default current_timestamp,
     modified timestamp default current_timestamp,
