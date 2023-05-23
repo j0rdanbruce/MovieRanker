@@ -26,29 +26,37 @@
 </script>
 
 <body>
-  <div id="register-here">
-    <h3><a href="{{ url_for('user.register') }}">Create another account here</a></h3>
-  </div>
-  
-  <form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div>
-      {{ form.email(placeholder='email') }}
-      {% for error in form.email.errors %}
-        <p>{{ error }}</p>
-      {% endfor %}
+  {% extends "layout.html" %}
+
+  {% block nav_bar %}
+    {{ super() }}
+  {% endblock %}
+
+  {% block main_content %}
+    <div id="register-here">
+      <h3><a href="{{ url_for('user.register') }}">Create another account here</a></h3>
     </div>
-    <div>
-      {{ form.password(placeholder='password') }}
-      {% for error in form.password.errors %}
-        <p>{{ error }}</p>
+    
+    <form action="" method="post">
+      {{ form.hidden_tag() }}
+      <div>
+        {{ form.email(placeholder='email') }}
+        {% for error in form.email.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>
+        {{ form.password(placeholder='password') }}
+        {% for error in form.password.errors %}
+          <p>{{ error }}</p>
+        {% endfor %}
+      </div>
+      <div>{{ form.submit() }}</div>
+      <br>
+      {% for message in get_flashed_messages() %}
+        <strong style="color: red;">{{ message }}</strong>
       {% endfor %}
-    </div>
-    <div>{{ form.submit() }}</div>
-    <br>
-    {% for message in get_flashed_messages() %}
-      <strong style="color: red;">{{ message }}</strong>
-    {% endfor %}
-  </form>
+    </form>
+  {% endblock %}
 </body>
 </html>

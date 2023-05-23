@@ -44,7 +44,9 @@
         display: inline;     
     }
 </style>
-<script></script>
+<script>
+
+</script>
 <body>
     <div class="flex-container">
         {% block nav_bar %}
@@ -57,13 +59,15 @@
         </div>
         <div id="top-navbar">
             <ul>
-                <li><a href="#">Login</a></li>
+                <li><a href="{{ url_for('user.login') }}">Login</a></li>
             </ul>
         </div>
         {% endblock %}
+
         {% block main_content %}
             <div id="main-content"></div>
         {% endblock %}
+
         {% block footer %}
             <div class="footer"></div>
         {% endblock %}
