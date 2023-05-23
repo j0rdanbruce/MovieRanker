@@ -42,12 +42,15 @@ def logout():
 #returns home page of the logged in user
 @blp.route("/home", methods=["GET"])
 def home_page():
-    cur = mysql.connection.cursor()
-    query = "SELECT username FROM user WHERE id={}".format(int(session["id"]))
-    cur.execute(query)
-    data = cur.fetchone()
-    cur.close()
-    return render_template("home_page.html", username=data['username'])
+    if session["id"] is not None:
+        cur = mysql.connection.cursor()
+        query = "SELECT username FROM user WHERE id={}".format(int(session["id"]))
+        cur.execute(query)
+        data = cur.fetchone()
+        cur.close()
+        return render_template("home_page.html", username=data['username'])
+    else:
+        return redirect(url_for("user.login"))
 
 
 '''@blp.route("/users")
