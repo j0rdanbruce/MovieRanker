@@ -3,7 +3,9 @@ from wtforms import StringField, PasswordField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, EqualTo
 
 class RegistrationForm(FlaskForm):
-    username = StringField("username", validators=[DataRequired()])
+    fname = StringField("First Name", validators=[DataRequired()])
+    lname = StringField("Last Name", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
     password1 = PasswordField('Password', validators = [DataRequired()])
     password2 = PasswordField('Confirm Password', validators = [DataRequired(),EqualTo('password1')])

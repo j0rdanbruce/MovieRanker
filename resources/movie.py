@@ -8,8 +8,8 @@ from flask_login import current_user
 import urllib.request, json, urllib.error
 from secret import SECRET_API_KEY
 
-from db import db, movies
-from models import FaveMovies
+from db import movies
+#from models import FaveMovies
 
 from schemas import PlainMovieSchema
 
@@ -46,7 +46,7 @@ class Movie(MethodView):
         pass
 
 #reutrn string dictionary of picked movies. this is not optimal. sending dictionary from html in string form. fix later.
-@blp.route("/picked_movies", methods=["POST"])
+'''@blp.route("/picked_movies", methods=["POST"])
 def get_picked_movies():
     if request.method == "POST":
         movie_data = request.form.getlist("movie")
@@ -59,7 +59,7 @@ def get_picked_movies():
             db.session.commit()
         return redirect(url_for('user.home_page'))
     else:
-        return {"message": "unsuccessful attempt"}
+        return {"message": "unsuccessful attempt"}'''
     
 
 #TMDB Api calls here
