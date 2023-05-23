@@ -8,6 +8,9 @@ from forms import RegistrationForm, LoginForm
 from db import mysql
 from models.user import User
 
+#wrapper functions here
+from wrappers import login_required
+
 #from schemas import PlainUserSchema
 
 blp = Blueprint("user", __name__, description="operations for login")
@@ -41,16 +44,14 @@ def logout():
 
 #returns home page of the logged in user
 @blp.route("/home", methods=["GET"])
+@login_required
 def home_page():
-    if session["id"] is not None:
-        cur = mysql.connection.cursor()
-        query = "SELECT username FROM user WHERE id={}".format(int(session["id"]))
-        cur.execute(query)
-        data = cur.fetchone()
-        cur.close()
-        return render_template("home_page.html", username=data['username'])
-    else:
-        return redirect(url_for("user.login"))
+    cur = mysql.connection.cursor()
+    query = "SELECT username FROM user WHERE id={}".format(int(session["id"]))
+    cur.execute(query)
+    data = cur.fetchone()
+    cur.close()
+    return render_template("home_page.html", username=data['username'])
 
 
 '''@blp.route("/users")
