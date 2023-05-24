@@ -7,7 +7,16 @@
   <title>Login</title>
 </head>
 <style>
-  #register-here a:hover{
+  .register-box{
+    background-color: gray;
+    border-radius: 20px;
+    width: 400px;
+    height: 200px;
+    position: relative;
+    margin: auto;
+    text-align: center;
+  }
+  .register-here a:hover{
     color: magenta;
   }
 </style>
@@ -33,7 +42,8 @@
   {% endblock %}
 
   {% block main_content %}
-    <div id="register-here">
+  <div class="register-box">
+    <div class="register-here">
       <h3><a href="{{ url_for('user.register') }}">Create another account here</a></h3>
     </div>
     
@@ -57,6 +67,7 @@
         <strong style="color: red;">{{ message }}</strong>
       {% endfor %}
     </form>
+  </div> 
   {% endblock %}
 </body>
 </html>

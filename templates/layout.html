@@ -7,23 +7,38 @@
     <title>Document</title>
 </head>
 <style>
-    .flex-container{
-        display: flex;
-        flex-direction: row;
-    }
-    #nav-links{
-        list-style-type: none;
-        padding: 10px;
-        margin: 0px;
-        margin-top: 30px;
-        border: solid black 3px;
+    div.title{
+        position: sticky;
+        text-align: center;
         border-radius: 10px;
-        width: 200px;
-        margin-left: 0px;
-        background-color: lightgray;
     }
-    #top-navbar{
-        
+    div.top-navbar{
+        background-color: rgb(33, 134, 223);
+        position: -webkit-sticky;
+        position: sticky;
+    }
+    .top-navbar li{
+        display: inline-block;
+        text-align: center;
+    }
+    .top-navbar a{
+        color: white;
+    }
+    #left-link{
+        position: relative;
+        left: -100px;
+    }
+    #right-link{
+        position: relative;
+        left: 1450px;
+    }
+    .side-navbar{
+        background-color: lightgray;
+        width: 200px;
+        border-radius: 10px;
+    }
+    div.side-navbar li{
+        display: block;
     }
     li a{
         text-decoration: none;
@@ -36,40 +51,47 @@
         background-color: #555;
         color: white;
     }
-    #main-content{
-        width: 500;
-        float: left;
-        margin: 0;
-        padding: 0;
-        display: inline;     
+    .main-content{
+        background-color: rgb(137, 151, 166);
+        width: 900px;
+        height: 900px;
+        margin: auto;
+        position: relative;
+        top: -100px;
     }
 </style>
 <script>
 
 </script>
+
 <body>
-    <div class="flex-container">
+    <div class="container">
         {% block nav_bar %}
-        <div id="nav-bar">
+        <div class="top-navbar">
+            <ul>
+                <li><a id="left-link" href="{{ url_for('other.showIndex') }}">Home</a></li>
+                <li><a id="right-link" href="{{ url_for('user.login') }}">Login | Sign up</a></li>
+            </ul>
+        </div>
+        <div class="title">
+            <h1>Movie Ranker</h1>
+        </div>
+        <div class="side-navbar">
             <ul id="nav-links">
                 <li><a href="#">Search for Movies</a></li>
                 <li><a href="#">Search for Actors</a></li>
                 <li><a href="#">Public Movie Forum</a></li>
             </ul>
         </div>
-        <div id="top-navbar">
-            <ul>
-                <li><a href="{{ url_for('user.login') }}">Login</a></li>
-            </ul>
-        </div>
         {% endblock %}
 
-        {% block main_content %}
-            <div id="main-content"></div>
-        {% endblock %}
+        <div class="main-content">
+            {% block main_content %}
+            {% endblock %}
+        </div>
 
         {% block footer %}
-            <div class="footer"></div>
+        <div class="footer"></div>
         {% endblock %}
     </div>
     
