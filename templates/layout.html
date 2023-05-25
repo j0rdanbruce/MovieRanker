@@ -70,7 +70,12 @@
         <div class="top-navbar">
             <ul>
                 <li><a id="left-link" href="{{ url_for('other.showIndex') }}">Home</a></li>
-                <li><a id="right-link" href="{{ url_for('user.login') }}">Login | Sign up</a></li>
+                {% if "id" in session %}
+                  <li><a id="right-link" href="{{ url_for('user.logout') }}">Sign out</a></li>
+                {% else %}
+                  <li><a id="right-link" href="{{ url_for('user.login') }}">Login | Sign Up</a></li>
+                {% endif %}
+                
             </ul>
         </div>
         <div class="title">
