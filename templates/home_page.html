@@ -7,9 +7,21 @@
   <title>Document</title>
 </head>
 <body>
-  <h1>Home Page</h1>
-  <p>
-    Hello, {{ username }}
-  </p>
+  {% extends "layout.html" %}
+
+  {% block nav_bar %}
+    {{ super() }}
+  {% endblock %}
+
+  {% block main_content %}
+    <h1>Home Page</h1>
+    <p>
+      Hello, {{ username }}
+    </p>
+  {% endblock %}
+
+  {% block footer %}
+    {{ super() }}
+  {% endblock %}
 </body>
 </html>
