@@ -11,11 +11,10 @@ create table if not exists user(
 );
 
 create table if not exists Movie(
-	id int not null auto_increment unique,
+	id int not null unique,
     title varchar(70) not null,
     pic_url varchar(150),
     plot varchar(600),
-    TMDB_id int not null unique,
     primary key(id)
 );
 

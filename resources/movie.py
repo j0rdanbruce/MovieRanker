@@ -7,7 +7,6 @@ import urllib.request, json, urllib.error
 from secret import SECRET_API_KEY
 
 from db import movies, mysql, Cursor
-#from models import FaveMovies
 
 from schemas import PlainMovieSchema
 
@@ -51,11 +50,11 @@ def add_movies():
         
         #open database connection
         cur = mysql.connection.cursor()
-        query_1 = "INSERT INTO Movie(title, pic_url, plot, TMDB_id) VALUES(%s, %s, %s, %s)"
+        query_1 = "INSERT INTO Movie(id, title, pic_url, plot) VALUES(%s, %s, %s, %s)"
         query_2 = "INSERT INTO Likes_Movie(user_id, movie_id) VALUES(%s, %s)"
         for movie in movie_data:
             movie = json.loads(movie.replace('\'', '\"'))
-            cur.execute(query_1, (movie['title'], movie['img_src'], movie['plot'], int(movie['id'])))
+            cur.execute(query_1, (int(movie['id']), movie['title'], movie['img_src'], movie['plot']))
             cur.execute(query_2, (int(session["id"]), int(movie["id"])))
         mysql.connection.commit()
         cur.close()
@@ -76,11 +75,10 @@ class TMDB_Calls(MethodView):
         base_movie_url = "https://image.tmdb.org/t/p/w400"
         movie_list = []
         for movie in movies_data["results"]:
-            movie_id = movie["id"]
             movie_data = {
+                "id": movie["id"],
                 "title": movie["original_title"],
                 "plot": movie["overview"],
-                "id": movie_id,
                 "img_src": base_movie_url + str(movie["backdrop_path"])
             }
             movie_list.append(movie_data)
