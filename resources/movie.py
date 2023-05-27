@@ -5,8 +5,10 @@ from flask_smorest import abort, Blueprint
 
 import urllib.request, json, urllib.error
 from secret import SECRET_API_KEY
+#flask form for searching movies
+from forms import SearchMovieForm
 
-from db import movies, mysql, Cursor
+from db import movies, mysql
 
 from schemas import PlainMovieSchema
 
@@ -42,6 +44,7 @@ class Movie(MethodView):
     def put(self, movie_id):
         pass
 
+
 #reutrn string dictionary of picked movies. this is not optimal. sending dictionary from html in string form. fix later.
 @blp.route("/picked_movies", methods=["POST"])
 def add_movies():
@@ -57,18 +60,19 @@ def add_movies():
             cur.execute(query_1, (int(movie['id']), movie['title'], movie['img_src'], movie['plot']))
             cur.execute(query_2, (int(session["id"]), int(movie["id"])))
         mysql.connection.commit()
+        #close database connection
         cur.close()
         return redirect(url_for('user.home_page'))
     else:
         return {"message": "unsuccessful attempt"}
 
 #TMDB Api calls here
-@blp.route("/movies/<string:movie_name>")
-class TMDB_Calls(MethodView):
-    #@blp.response(200, PlainMovieSchema(many=True))
-    def get(self, movie_name):
+@blp.route("/search/movie", methods=["POST", "GET"])
+def search_movie():
+    form = SearchMovieForm()
+    if form.validate_on_submit():
+        movie_name = form.title.data
         movie_name = movie_name.replace(' ', '+')
-        #figure out environment paths later
         url = "https://api.themoviedb.org/3/search/movie?api_key={}&query={}".format(SECRET_API_KEY, movie_name)
         response = urllib.request.urlopen(url)
         movies_data = json.loads(response.read())
@@ -82,5 +86,5 @@ class TMDB_Calls(MethodView):
                 "img_src": base_movie_url + str(movie["backdrop_path"])
             }
             movie_list.append(movie_data)
-        #return movie_list, 201
         return render_template("movies.html", movies=movie_list)
+    return render_template("search.html", form=form)

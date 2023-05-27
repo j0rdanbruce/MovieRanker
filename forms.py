@@ -17,3 +17,7 @@ class LoginForm(FlaskForm):
     password = PasswordField('Password', validators=[DataRequired()])
     #remember = BooleanField('Remember Me',validators= [DataRequired()])
     submit = SubmitField('Login')
+
+class SearchMovieForm(FlaskForm):
+    title = StringField('Movie Title', validators=[DataRequired()])
+    search = SubmitField('Search Movie')
