@@ -1,14 +1,12 @@
 import uuid, json
-from flask import request, render_template, redirect, url_for
+from flask import request, render_template, redirect, url_for, session
 from flask.views import MethodView
 from flask_smorest import abort, Blueprint
-
-from flask_login import current_user
 
 import urllib.request, json, urllib.error
 from secret import SECRET_API_KEY
 
-from db import movies
+from db import movies, mysql, Cursor
 #from models import FaveMovies
 
 from schemas import PlainMovieSchema
@@ -46,27 +44,31 @@ class Movie(MethodView):
         pass
 
 #reutrn string dictionary of picked movies. this is not optimal. sending dictionary from html in string form. fix later.
-'''@blp.route("/picked_movies", methods=["POST"])
-def get_picked_movies():
+@blp.route("/picked_movies", methods=["POST"])
+def add_movies():
     if request.method == "POST":
         movie_data = request.form.getlist("movie")
+        
+        #open database connection
+        cur = mysql.connection.cursor()
+        query_1 = "INSERT INTO Movie(title, pic_url, plot, TMDB_id) VALUES(%s, %s, %s, %s)"
+        query_2 = "INSERT INTO Likes_Movie(user_id, movie_id) VALUES(%s, %s)"
         for movie in movie_data:
             movie = json.loads(movie.replace('\'', '\"'))
-            movie_pick = FaveMovies(title=movie['title'], picture_url=movie['img_src'], 
-                                    plot=movie['plot'], movie_id=int(movie['id']), 
-                                    user_id=current_user.id)
-            db.session.add(movie_pick)
-            db.session.commit()
+            cur.execute(query_1, (movie['title'], movie['img_src'], movie['plot'], int(movie['id'])))
+            cur.execute(query_2, (int(session["id"]), int(movie["id"])))
+        mysql.connection.commit()
+        cur.close()
         return redirect(url_for('user.home_page'))
     else:
-        return {"message": "unsuccessful attempt"}'''
-    
+        return {"message": "unsuccessful attempt"}
 
 #TMDB Api calls here
 @blp.route("/movies/<string:movie_name>")
 class TMDB_Calls(MethodView):
     #@blp.response(200, PlainMovieSchema(many=True))
     def get(self, movie_name):
+        movie_name = movie_name.replace(' ', '+')
         #figure out environment paths later
         url = "https://api.themoviedb.org/3/search/movie?api_key={}&query={}".format(SECRET_API_KEY, movie_name)
         response = urllib.request.urlopen(url)

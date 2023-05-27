@@ -1,5 +1,3 @@
-{% extends "layout.html" %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,32 +7,24 @@
     <title>Movie Ranker</title>
 </head>
 <style>
-    li{
+    div.movie-content li{
         margin-left: 45px;
     }
 </style>
 <script>
-	/*window.onload=function(){         //window.onload fixed my issue of console logging form data.
-    const form = document.querySelector('#movie-selection')
-      form.addEventListener('submit', event => {
-      event.preventDefault();
-      const formData = new FormData(form);
-      formData.append('movie')
-			console.log('here')
-      console.log(formData);
-    });
-  }*/
 </script>
 <body>
+    {% extends "layout.html" %}
+
     {% block nav_bar %}
         {{ super() }}
     {% endblock %}
+
     {% block main_content %}
-    <div>
+    <div class="movie-content">
         <h1>Movie List:</h1>
-        {% block content %}
             {% for movie in movies %}
-            <form id="movie-selection" method="post" action="{{ url_for('movies.get_picked_movies') }}">
+            <form id="movie" method="post" action="{{ url_for('movies.add_movies') }}">
                 <ul>
                     <h2>{{movie.title}}</h2>
                     <li>{{movie.plot}}</li>
@@ -45,7 +35,6 @@
             {% endfor %}
                 <button type="submit" value="Add Movies">Submit</button>
             </form>      
-        {% endblock %}
     </div>
     {% endblock %}
 </body>

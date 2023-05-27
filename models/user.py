@@ -4,12 +4,14 @@ from  werkzeug.security import generate_password_hash, check_password_hash
 from forms import RegistrationForm
 
 class User:
+    '''Module that represents a user. Perform operations relative to users like registering new users to application and adding user to session.'''
     def __init__(self, username=None, email=None, pswrd=None):
         self.email = email
         self.pswrd = pswrd
         self.username = username
     
     def add_to_session(self):
+        '''Adds the users unqie integer \'id\' to the session.'''
         cur = mysql.connection.cursor()
         query = "SELECT * FROM user WHERE email='{}' AND pwrd_hash='{}'".format(self.email, self.pswrd)
         cur.execute(query)
@@ -19,14 +21,15 @@ class User:
             session["id"] = user["id"]
             return render_template("/home_page.html")
     
-    def insert_user(self, fname, lname):
+    def insert_user(self, fname: str, lname: str):
+        '''Registers a new user's info to the database.'''
         cur = mysql.connection.cursor()
         query = "INSERT INTO user(fname, lname, email, username, pwrd_hash) VALUES(%s, %s, %s, %s, %s)"
         cur.execute(query, (fname, lname, self.email, self.username, self.pswrd))
         mysql.connection.commit()
         cur.close()
 
-    def get_id(user_id):
+    def get_id(user_id: int):
         cur = mysql.connection.cursor()
         query = "SELECT * FROM user WHERE id='{}'".format(user_id)
         cur.execute(query)
