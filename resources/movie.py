@@ -8,7 +8,9 @@ from secret import SECRET_API_KEY
 #flask form for searching movies
 from forms import SearchMovieForm
 
-from db import movies, mysql
+from db import movies, mysql, Cursor
+
+from wrappers import login_required
 
 from schemas import PlainMovieSchema
 
@@ -88,3 +90,12 @@ def search_movie():
             movie_list.append(movie_data)
         return render_template("movies.html", movies=movie_list)
     return render_template("search.html", form=form)
+
+@blp.route("/user/movie/movie_list", methods=["GET"])
+@login_required
+def get_liked_movies():
+    if request.method == "GET":
+        cur = Cursor()
+        query = "select title, pic_url, plot from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={}".format(int(session["id"]))
+        movie_data = cur.get_all_rows(query)
+        return render_template("fave_movies.html", movies=movie_data)

@@ -23,6 +23,17 @@ class Cursor:
         cursor.execute(query)
         cursor.close()
     
+    def get_all_rows(self, query: str) -> list:
+        '''returns a list of all tuples from the query paramter in dictionary format.'''
+        return_results = []
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        results = cur.fetchall()
+        cur.close()
+        for tuple in results:
+            return_results.append(tuple)
+        return return_results
+
     def delete(self, query: str):
         cur = mysql.connection.cursor()
         try:
