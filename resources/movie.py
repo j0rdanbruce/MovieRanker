@@ -91,6 +91,7 @@ def search_movie():
         return render_template("movies.html", movies=movie_list)
     return render_template("search.html", form=form)
 
+#application endpoint for users to view their liked movie list
 @blp.route("/user/movie/movie_list", methods=["GET", "POST"])
 @login_required
 def get_liked_movies():
