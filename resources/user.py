@@ -23,7 +23,7 @@ def register():
         user = User(username=form.username.data, email=form.email.data, pswrd=form.password1.data)
         #user.set_password(form.password1.data)
         user.insert_user(form.fname.data, form.lname.data)
-        return redirect(url_for("user.login_here"))
+        return redirect(url_for("user.login"))
     return render_template("registration.html", form=form)
 
 #login to your account

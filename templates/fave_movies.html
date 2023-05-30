@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+</head>
+
+<style>
+
+</style>
+
+<body>
+  {% extends "layout.html" %}
+
+  {% block nav_bar %}
+    {{super()}}  
+  {% endblock %}
+
+  {% block main_content %}
+    <h1>Favorite Movies:</h1>
+    <div class="movie-content">
+      {% for movie in movies %}
+        <ul>
+          <li>{{ movie.title }}</li>
+          <li>{{ movie.plot }}</li>
+          <li><img src="{{ movie.pic_url }}" alt="Missing movie image"></li>
+        </ul>
+      {% endfor %}
+    </div>
+    
+  {% endblock %}
+
+</body>
+
+<footer>
+
+</footer>
