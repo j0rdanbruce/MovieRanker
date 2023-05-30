@@ -91,11 +91,16 @@ def search_movie():
         return render_template("movies.html", movies=movie_list)
     return render_template("search.html", form=form)
 
-@blp.route("/user/movie/movie_list", methods=["GET"])
+@blp.route("/user/movie/movie_list", methods=["GET", "POST"])
 @login_required
 def get_liked_movies():
+    cur = Cursor()
     if request.method == "GET":
-        cur = Cursor()
-        query = "select title, pic_url, plot from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={}".format(int(session["id"]))
+        query = "select title, pic_url, plot, movie_id from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={}".format(int(session["id"]))
         movie_data = cur.get_all_rows(query)
         return render_template("fave_movies.html", movies=movie_data)
+    if request.method == "POST":
+        movie_id = request.form.get("movie_id")
+        query = "DELETE FROM Likes_Movie WHERE user_id={} AND movie_id={}".format(int(session["id"]), movie_id)
+        cur.delete(query)
+        return redirect(url_for("movies.get_liked_movies"))

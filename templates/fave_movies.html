@@ -19,7 +19,7 @@
   {% endblock %}
 
   {% block main_content %}
-    <h1>Favorite Movies:</h1>
+    <h2>Favorite Movies:</h2>
     <div class="movie-content">
       {% for movie in movies %}
         <ul>
@@ -27,6 +27,9 @@
           <li>{{ movie.plot }}</li>
           <li><img src="{{ movie.pic_url }}" alt="Missing movie image"></li>
         </ul>
+        <form method="post" action="{{ url_for('movies.get_liked_movies') }}">
+          <button type="submit" name="movie_id" value="{{ movie.movie_id }}">Remove</button>
+        </form>
       {% endfor %}
     </div>
     
