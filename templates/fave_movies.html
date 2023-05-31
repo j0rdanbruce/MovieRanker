@@ -7,6 +7,13 @@
     <title>Movie Ranker</title>
 </head>
 
+<script>
+  function confWindow(){
+    let answer = confirm("Are you sure you want to remove this movie from your list?")
+    return answer;
+  }
+</script>
+
 <style>
 
 </style>
@@ -27,8 +34,8 @@
           <li>{{ movie.plot }}</li>
           <li><img src="{{ movie.pic_url }}" alt="Missing movie image"></li>
         </ul>
-        <form method="post" action="{{ url_for('movies.get_liked_movies') }}">
-          <button type="submit" name="movie_id" value="{{ movie.movie_id }}">Remove</button>
+        <form id="movie-submit-btn" method="post" action="{{ url_for('movies.get_liked_movies') }}">
+          <button type="submit" name="movie_id" value="{{ movie.movie_id }}" onclick="return confWindow()">Remove</button>
         </form>
       {% endfor %}
     </div>
