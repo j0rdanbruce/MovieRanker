@@ -34,12 +34,13 @@ class Cursor:
             return_results.append(tuple)
         return return_results
 
-    def delete(self, query: str):
+    def delete(self, query: str) -> None:
+        '''Delete method of cursor class. Requires a specified query as a parameter'''
         cur = mysql.connection.cursor()
         try:
             cur.execute(query)
         except:
-            pass
+            return {"message": "Unsuccessful deletion from database."}
         mysql.connection.commit()
         cur.close()
 
