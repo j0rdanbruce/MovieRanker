@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+</head>
+
+<script></script>
+
+<style>
+
+</style>
+
+<body>
+  {% extends "layout.html" %}
+
+  {% block nav_bar %}
+    {{ super() }}
+  {% endblock %}
+
+  {% block main_content %}
+    <div class="forum-form">
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="title-box">
+          {{ form.title(placeholder='Forum Title') }}
+          {% for error in form.title.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        <div class="body-box">
+          {{ form.body(placeholder='Enter text here') }}
+          {% for error in form.body.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        <div class="submit-btn">
+          {{ form.post() }}
+        </div>
+      </form>
+      <br>
+        {% for message in get_flashed_messages() %}
+          <strong style="color: red;">{{ message }}</strong>
+        {% endfor %}
+    </div>
+  {% endblock %}
+</body>
+
+<footer>
+
+</footer>
+
+</html>

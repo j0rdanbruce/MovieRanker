@@ -6,7 +6,6 @@ from flask import session
 from flask_session import Session
 
 from db import mysql
-from models.user import User
 
 #from flask_mysqldb import MySQL
 
@@ -15,6 +14,7 @@ from resources.tv import blp as ShowBlueprint
 from resources.actor import blp as ActorBlueprint
 from resources.other import blp as OtherBlueprint
 from resources.user import blp as UserBlueprint
+from resources.forum import blp as ForumBlueprint
 
 from secret import SECRET_API_KEY, SECRET_KEY
 
@@ -52,4 +52,4 @@ api.register_blueprint(ShowBlueprint)
 api.register_blueprint(ActorBlueprint)
 api.register_blueprint(OtherBlueprint)
 api.register_blueprint(UserBlueprint)
-
+api.register_blueprint(ForumBlueprint)

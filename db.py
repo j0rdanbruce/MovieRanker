@@ -10,18 +10,22 @@ actors = {}
 
 class Cursor:
     '''Cursor module for connecting to database and performing basic CRUD operations with MySQL.'''
-    def insert_query(self, query: str, values: tuple):
+    def insert(self, query: str, values: tuple):
         cur = mysql.connection.cursor()
-        try:
-            cur.execute(query, values)
-        except:
-            return {"message": "Unsuccessful insert query."}
+        cur.execute(query, values)
         mysql.connection.commit()
         cur.close()
     
     def multiple_insert_query(self, cursor, query: str):
         cursor.execute(query)
         cursor.close()
+
+    def get_row(self, query: str):
+        cur = mysql.connection.cursor()
+        cur.execute(query)
+        result = cur.fetchone()
+        cur.close()
+        return result
     
     def get_all_rows(self, query: str) -> list:
         '''returns a list of all tuples from the query paramter in dictionary format.'''
