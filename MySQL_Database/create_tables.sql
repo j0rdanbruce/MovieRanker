@@ -36,6 +36,7 @@ create table if not exists Forum(
     primary key(id),
     foreign key(owner) references user(id)
 );
+alter table Forum add column private boolean default(false);
 
 create table if not exists Comment(
 	id int not null unique auto_increment,

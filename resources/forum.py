@@ -24,6 +24,6 @@ def create_forum():
     form = ForumForm()
     if form.validate_on_submit():
         user = User(id=int(session["id"]))
-        user.forum.create_forum(form.title.data, form.body.data, user.id)
+        user.forum.create_forum(form.title.data, form.body.data, user.id, form.private.data)
         return redirect(url_for("forum.my_forums"))
     return render_template("my_forums.html", form=form)
