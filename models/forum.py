@@ -14,8 +14,8 @@ class Forum():
     def get_my_forums(self):
         pass
 
-    def get_all_forums(self):
-        query = "SELECT * FROM Forum WHERE private='false'"
+    def get_all_forums(self) -> list[dict]:
+        query = "select id, title, body, upvote - downvote as votes from Forum LIMIT 50"
         result = self.cursor.get_all_rows(query)
         if result:
             return result

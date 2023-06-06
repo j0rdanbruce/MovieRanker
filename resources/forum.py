@@ -8,9 +8,11 @@ from wrappers import login_required
 
 blp = Blueprint("forum", __name__, description="blueprint for forum related functions")
 
-@blp.route("/forum/all_public_forums", methods=["GET"])
-def all_public_forums():
-    pass
+@blp.route("/forum/get_forums", methods=["GET"])
+def get_forums():
+    user = User(id=int(session["id"]))
+    forums = user.forum.get_all_forums()
+    return render_template("see_forums.html", forums=forums)
 
 @blp.route("/forum/my_forums", methods=["GET"])
 def my_forums():
@@ -27,3 +29,4 @@ def create_forum():
         user.forum.create_forum(form.title.data, form.body.data, user.id, form.private.data)
         return redirect(url_for("forum.my_forums"))
     return render_template("my_forums.html", form=form)
+

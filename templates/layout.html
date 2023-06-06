@@ -85,7 +85,8 @@
             <ul id="nav-links">
                 <li><a href="{{ url_for('movies.search_movie') }}">Search for Movies</a></li>
                 <li><a href="#">Search for Actors</a></li>
-                <li><a href="{{ url_for('forum.all_public_forums') }}">Public Movie Forum</a></li>
+                <li><a href="{{ url_for('forum.get_forums') }}">Public Movie Forum</a></li>
+                <li><a href="{{ url_for('forum.create_forum') }}">Add a Forum</a></li>
                 {% if "id" in session %}
                   <li><a href="{{ url_for('movies.get_liked_movies') }}">My Favorite Movies</a></li>
                 {% endif %}
