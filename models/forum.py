@@ -19,4 +19,11 @@ class Forum():
         result = self.cursor.get_all_rows(query)
         if result:
             return result
-
+    
+    def upVote(self, forum_id:int) -> int:
+        update_query = "UPDATE Forum SET upvote = upvote + 1 WHERE id={}".format(forum_id)
+        sel_query = "SELECT upvote - downvote as votes FROM Forum WHERE id={}".format(forum_id)
+        self.cursor.update(update_query)
+        result = self.cursor.get_row(sel_query)
+        if result:
+            return int(result["votes"])

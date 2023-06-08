@@ -50,9 +50,6 @@ class Cursor:
 
     def update(self, query: str):
         cur = mysql.connection.cursor()
-        try:
-            cur.execute(query)
-        except:
-            pass
+        cur.execute(query)
         mysql.connection.commit()
         cur.close()

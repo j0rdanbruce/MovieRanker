@@ -1,5 +1,5 @@
 from flask_smorest import Blueprint
-from flask import session, render_template, redirect, url_for
+from flask import session, render_template, redirect, url_for, request
 from forms import ForumForm
 
 from models.user import User
@@ -30,3 +30,12 @@ def create_forum():
         return redirect(url_for("forum.my_forums"))
     return render_template("my_forums.html", form=form)
 
+@blp.route("/forum/get_forums/upvote", methods=["POST"])
+def upVote():
+    if request.method == "POST":
+        forum_id = request.form.get("forum_id")
+        if forum_id is not None:
+            user = User(id=int(session["id"]))
+            return str(user.forum.upVote(int(forum_id)))
+        else:
+            return "nope"

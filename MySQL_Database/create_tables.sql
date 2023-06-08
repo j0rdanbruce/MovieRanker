@@ -37,6 +37,8 @@ create table if not exists Forum(
     foreign key(owner) references user(id)
 );
 alter table Forum add column private boolean default(false);
+alter table Forum add column created datetime default(current_timestamp());
+alter table Forum add column modified datetime default(current_timestamp());
 
 create table if not exists Comment(
 	id int not null unique auto_increment,
@@ -49,3 +51,5 @@ create table if not exists Comment(
     foreign key(owner) references user(id),
     foreign key(forum_id) references Forum(id)
 );
+alter table Comment add column created datetime default(current_timestamp());
+alter table Comment add column modified datetime default(current_timestamp());

@@ -7,7 +7,19 @@
     <title>Movie Ranker</title>
 </head>
 
-<script></script>
+<script type="text/javascript">
+  function upVote(element){
+    var forumID = element.getAttribute("data-forum-id");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+      if (this.readyState==4 && this.status==200){
+        document.getElementById("votes").innerHTML = this.responseText;
+    }};
+    xhttp.open("POST", "{{ url_for('forum.upVote') }}", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("forum_id="+forumID);
+  }
+</script>
 
 <style>
   div.forum-box{
@@ -16,7 +28,7 @@
     display: flex;
     flex-direction: row;
     border-style: solid;
-    border-radius: 7px;
+    border-radius: 20px;
     height: 180px;
     width: 800px;
   }
@@ -25,6 +37,8 @@
     flex-direction: column;
     background-color: rgb(33, 134, 223);
     width: 40px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
   }
   /*changes color of the anchors for the voting arrows*/
   div.left-box > div > a{
@@ -66,8 +80,8 @@
     {% for forum in forums %}
       <div class="forum-box">
         <div class="left-box">
-          <div class="up-arrow"><a href="#" style="text-decoration: none">&#8679;</a></div>
-          <div class="votes-box">{{ forum.votes }}</div>
+          <div class="up-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}">&#8679;</a></div>
+          <div class="votes-box"><strong id="votes">{{ forum.votes }}</strong></div>
           <div class="down-arrow"><a href="#" style="text-decoration: none">&#8679;</a></div>
         </div>
         <div class="right-box">
@@ -75,7 +89,6 @@
           <p>{{ forum.body }}</p>
           <p># comments</p>
         </div>
-        
       </div>
       <br>
     {% endfor %}
