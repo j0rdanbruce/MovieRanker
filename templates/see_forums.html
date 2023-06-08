@@ -13,7 +13,7 @@
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function(){
       if (this.readyState==4 && this.status==200){
-        document.getElementById("votes").innerHTML = this.responseText;
+        document.getElementById(forumID).innerHTML = this.responseText;
     }};
     xhttp.open("POST", "{{ url_for('forum.upVote') }}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -81,7 +81,7 @@
       <div class="forum-box">
         <div class="left-box">
           <div class="up-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}">&#8679;</a></div>
-          <div class="votes-box"><strong id="votes">{{ forum.votes }}</strong></div>
+          <div class="votes-box"><strong id="{{ forum.id }}">{{ forum.votes }}</strong></div>
           <div class="down-arrow"><a href="#" style="text-decoration: none">&#8679;</a></div>
         </div>
         <div class="right-box">

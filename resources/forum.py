@@ -31,6 +31,7 @@ def create_forum():
     return render_template("my_forums.html", form=form)
 
 @blp.route("/forum/get_forums/upvote", methods=["POST"])
+@login_required
 def upVote():
     if request.method == "POST":
         forum_id = request.form.get("forum_id")
