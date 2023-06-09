@@ -21,3 +21,9 @@ class LoginForm(FlaskForm):
 class SearchMovieForm(FlaskForm):
     title = StringField('Movie Title', validators=[DataRequired()])
     search = SubmitField('Search Movie')
+
+class ForumForm(FlaskForm):
+    title = StringField('Forum Title', validators=[DataRequired()])
+    body = StringField(validators=[DataRequired()])
+    private = BooleanField('Private?')
+    post = SubmitField('Post')

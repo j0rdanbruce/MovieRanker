@@ -1,5 +1,3 @@
-import json
-
 from flask_smorest import Blueprint
 from flask.views import MethodView
 from flask import render_template, flash, redirect, url_for, session
@@ -58,13 +56,10 @@ def home_page():
     cur.close()
     return render_template("home_page.html", username=data['username'])
 
+#forum related functions go here
 
-'''@blp.route("/users")
-class User(MethodView):
-    @blp.response(200, PlainUserSchema(many=True))
-    def get(self):
-        users = UserModel.query.all()
-        return users'''
+
+
 
 @blp.route('/database')
 def index():

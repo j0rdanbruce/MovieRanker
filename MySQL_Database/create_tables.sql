@@ -25,3 +25,31 @@ create table if not exists Likes_Movie(
     foreign key(user_id) references user(id),
     foreign key(movie_id) references Movie(id)
 );
+
+create table if not exists Forum(
+	id int not null unique auto_increment,
+    title varchar(80) not null,
+    body varchar(400) not null,
+    upvote int not null default(0),
+    downvote int not null default(0),
+    owner int not null,
+    primary key(id),
+    foreign key(owner) references user(id)
+);
+alter table Forum add column private boolean default(false);
+alter table Forum add column created datetime default(current_timestamp());
+alter table Forum add column modified datetime default(current_timestamp());
+
+create table if not exists Comment(
+	id int not null unique auto_increment,
+    body varchar(400) not null,
+    likes int not null default(0),
+    dislikes int not null default(0),
+    owner int not null,
+    forum_id int not null,
+    primary key(id),
+    foreign key(owner) references user(id),
+    foreign key(forum_id) references Forum(id)
+);
+alter table Comment add column created datetime default(current_timestamp());
+alter table Comment add column modified datetime default(current_timestamp());

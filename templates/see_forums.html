@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+</head>
+
+<script type="text/javascript">
+  function upVote(element){
+    var voteType = element.getAttribute("data-vote-type");
+    var forumID = element.getAttribute("data-forum-id");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+      if (this.readyState==4 && this.status==200){
+        document.getElementById(forumID).innerHTML = this.responseText;
+    }};
+    xhttp.open("POST", "{{ url_for('forum.upVote') }}", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("forum_id="+forumID+"&vote_type="+voteType);
+  }
+</script>
+
+<style>
+  div.forum-box{
+    background-color: aliceblue;
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    border-style: solid;
+    border-radius: 20px;
+    height: 180px;
+    width: 800px;
+  }
+  div.left-box{
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(33, 134, 223);
+    width: 40px;
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+  }
+  /*changes color of the anchors for the voting arrows*/
+  div.left-box > div > a{
+    color: white;
+  }
+  div.votes-box{
+    position: relative;
+    margin: auto;
+    font-size: 20px;
+  }
+  div.up-arrow{
+    position: relative;
+    margin: auto;
+    top: 20px;
+    font-size: 30px;
+  }
+  div.down-arrow{
+    position: relative;
+    margin: auto;
+    top: -20px;
+    font-size: 30px;
+    /*code for flipping the image*/
+    transform: scale(1, -1);
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    transform: scale(1, -1);
+    /*end code for flipped image*/
+  }
+
+</style>
+
+<body>
+  {% extends "layout.html" %}
+
+  {% block main_content %}
+    <h2>View Forums</h2>
+    {% for forum in forums %}
+      <div class="forum-box">
+        <div class="left-box">
+          <div class="up-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="upvote">&#8679;</a></div>
+          <div class="votes-box"><strong id="{{ forum.id }}">{{ forum.votes }}</strong></div>
+          <div class="down-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="downvote">&#8679;</a></div>
+        </div>
+        <div class="right-box">
+          <h3>{{ forum.title }} : {{ forum.id }}</h3>
+          <p>{{ forum.body }}</p>
+          <p># comments</p>
+        </div>
+      </div>
+      <br>
+    {% endfor %}
+  {% endblock %}
+</body>
+
+<footer>
+
+</footer>
+</html>
