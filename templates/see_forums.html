@@ -9,6 +9,7 @@
 
 <script type="text/javascript">
   function upVote(element){
+    var voteType = element.getAttribute("data-vote-type");
     var forumID = element.getAttribute("data-forum-id");
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function(){
@@ -17,7 +18,7 @@
     }};
     xhttp.open("POST", "{{ url_for('forum.upVote') }}", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("forum_id="+forumID);
+    xhttp.send("forum_id="+forumID+"&vote_type="+voteType);
   }
 </script>
 
@@ -80,9 +81,9 @@
     {% for forum in forums %}
       <div class="forum-box">
         <div class="left-box">
-          <div class="up-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}">&#8679;</a></div>
+          <div class="up-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="upvote">&#8679;</a></div>
           <div class="votes-box"><strong id="{{ forum.id }}">{{ forum.votes }}</strong></div>
-          <div class="down-arrow"><a href="#" style="text-decoration: none">&#8679;</a></div>
+          <div class="down-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="downvote">&#8679;</a></div>
         </div>
         <div class="right-box">
           <h3>{{ forum.title }} : {{ forum.id }}</h3>

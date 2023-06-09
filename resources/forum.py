@@ -34,9 +34,10 @@ def create_forum():
 @login_required
 def upVote():
     if request.method == "POST":
+        vote_type = request.form.get("vote_type")
         forum_id = request.form.get("forum_id")
         if forum_id is not None:
             user = User(id=int(session["id"]))
-            return str(user.forum.upVote(int(forum_id)))
+            return str(user.forum.upVote(vote_type, int(forum_id)))
         else:
             return "nope"
