@@ -20,38 +20,40 @@ from resources.comment import blp as CommentBlueprint
 from secret import SECRET_API_KEY, SECRET_KEY
 
 
+def create_app(db_url=None):
+    app = Flask(__name__)
 
-app = Flask(__name__)
+    app.config["PROPAGATE_EXCEPTIONS"] = True
+    app.config["API_TITLE"] = "MovieRanker REST API"
+    app.config["API_VERSION"] = "v1"
+    app.config["OPENAPI_VERSION"] = "3.0.3"
+    app.config["OPENAPI_URL_PREFIX"] = "/"
+    app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
+    app.config["MYSQL_HOST"] = 'sql.njit.edu'
+    app.config['MYSQL_USER'] = 'jeb79'
+    app.config['MYSQL_PASSWORD'] = 'Shumai123!'
+    app.config['MYSQL_DB'] = 'jeb79'
+    app.config["MYSQL_CURSORCLASS"] = 'DictCursor'
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
+    app.config["SECRET_KEY"] = SECRET_KEY
 
-app.config["PROPAGATE_EXCEPTIONS"] = True
-app.config["API_TITLE"] = "MovieRanker REST API"
-app.config["API_VERSION"] = "v1"
-app.config["OPENAPI_VERSION"] = "3.0.3"
-app.config["OPENAPI_URL_PREFIX"] = "/"
-app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
-app.config["MYSQL_HOST"] = 'sql.njit.edu'
-app.config['MYSQL_USER'] = 'jeb79'
-app.config['MYSQL_PASSWORD'] = 'Shumai123!'
-app.config['MYSQL_DB'] = 'jeb79'
-app.config["MYSQL_CURSORCLASS"] = 'DictCursor'
-app.config["SESSION_PERMANENT"] = False
-app.config["SESSION_TYPE"] = "filesystem"
-app.config["SECRET_KEY"] = SECRET_KEY
+    mysql.init_app(app)
+    api = Api(app)
 
-mysql.init_app(app)
-api = Api(app)
+    '''with app.app_context():
+        cur = mysql.connection.cursor()'''
 
-'''with app.app_context():
-    cur = mysql.connection.cursor()'''
-
-#initializing session manager to flask app
-Session(app)
+    #initializing session manager to flask app
+    Session(app)
 
 
-api.register_blueprint(MovieBlueprint)
-api.register_blueprint(ShowBlueprint)
-api.register_blueprint(ActorBlueprint)
-api.register_blueprint(OtherBlueprint)
-api.register_blueprint(UserBlueprint)
-api.register_blueprint(ForumBlueprint)
-api.register_blueprint(CommentBlueprint)
+    api.register_blueprint(MovieBlueprint)
+    api.register_blueprint(ShowBlueprint)
+    api.register_blueprint(ActorBlueprint)
+    api.register_blueprint(OtherBlueprint)
+    api.register_blueprint(UserBlueprint)
+    api.register_blueprint(ForumBlueprint)
+    api.register_blueprint(CommentBlueprint)
+
+    return app
