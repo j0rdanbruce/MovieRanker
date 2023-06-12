@@ -70,6 +70,12 @@
     transform: scale(1, -1);
     /*end code for flipped image*/
   }
+  p.comment > a{
+    text-decoration: none;
+  }
+  p.comment > a:hover{
+    color: rgb(33, 134, 223);
+  }
 
 </style>
 
@@ -88,7 +94,7 @@
         <div class="right-box">
           <h3>{{ forum.title }} : {{ forum.id }}</h3>
           <p>{{ forum.body }}</p>
-          <p># comments</p>
+          <p class="comment"><a href="{{ url_for('comment.comments', forum_id=forum.id) }}"># comments</a></p>
         </div>
       </div>
       <br>

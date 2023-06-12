@@ -4,6 +4,7 @@ from  werkzeug.security import generate_password_hash, check_password_hash
 from forms import RegistrationForm
 
 from models.forum import Forum
+from models.comment import Comment
 
 class User:
     '''Module that represents a user. Perform operations relative to users like registering new users to application and adding user to session.'''
@@ -18,6 +19,7 @@ class User:
         if username is not None:
             self.username = username
         self.forum = Forum()
+        self.comment = Comment(id)
     
     def get_user_by_id(self):
         cur = Cursor()
