@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+</head>
+
+<script></script>
+
+<style>
+  div.title-box > input{
+    height: auto;
+    width: auto;
+    border-radius: 5px;
+    border: none;
+  }
+  div.body-box > input{
+    height: 200px;
+    width: 500px;
+    border-radius: 10px;
+    border: none;
+  }
+  div.private-box > fieldset{
+    height: 50px;
+    width: 200px;
+  }
+</style>
+
+<body>
+  {% extends "layout.html" %}
+
+  {% block nav_bar %}
+    {{ super() }}
+  {% endblock %}
+
+  {% block main_content %}
+    <h2>Create Forum:</h2>
+    <div class="forum-form">
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="title-box">
+          {{ form.title(placeholder='Forum Title') }}
+          {% for error in form.title.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        <br>
+        <div class="body-box">
+          {{ form.body(placeholder='Enter text here') }}
+          {% for error in form.body.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        <br>
+        <div class="private-box">
+          <fieldset>
+            <legend>Is you forum private?</legend>
+            {{ form.private() }}
+            <label for="check-box">Private</label>
+          </fieldset>
+          {% for error in form.private.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        <br>
+        <div class="submit-btn">
+          {{ form.post() }}
+        </div>
+      </form>
+      <br>
+        {% for message in get_flashed_messages() %}
+          <strong style="color: red;">{{ message }}</strong>
+        {% endfor %}
+    </div>
+  {% endblock %}
+</body>
+
+<footer>
+
+</footer>
+
+</html>
