@@ -11,8 +11,11 @@ class Forum():
         values = (title, body, user_id, private)
         self.cursor.insert(query, values)
     
-    def get_my_forums(self):
-        pass
+    def get_forum(self, forum_id: int):
+        query = "SELECT Forum.id, title, body, upvote - downvote as votes, username FROM Forum, user WHERE user.id = owner AND Forum.id={}".format(forum_id)
+        result = self.cursor.get_row(query)
+        if result:
+            return result
 
     def get_all_forums(self) -> list[dict]:
         query = "select id, title, body, upvote - downvote as votes from Forum LIMIT 50"

@@ -27,3 +27,7 @@ class ForumForm(FlaskForm):
     body = StringField(validators=[DataRequired()])
     private = BooleanField('Private?')
     post = SubmitField('Post')
+
+class CommentForm(FlaskForm):
+    body = StringField('Write your heart out!', validators=[DataRequired()])
+    comment = SubmitField('Comment')
