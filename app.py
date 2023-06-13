@@ -1,5 +1,5 @@
 import os
-
+from dotenv import load_dotenv
 from flask import Flask
 from flask_smorest import Api
 from flask import session
@@ -22,17 +22,17 @@ from secret import SECRET_API_KEY, SECRET_KEY
 
 def create_app(db_url=None):
     app = Flask(__name__)
-
+    load_dotenv
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "MovieRanker REST API"
     app.config["API_VERSION"] = "v1"
     app.config["OPENAPI_VERSION"] = "3.0.3"
     app.config["OPENAPI_URL_PREFIX"] = "/"
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
-    app.config["MYSQL_HOST"] = "83.229.67.41" or os.getenv("mysql_host")
-    app.config['MYSQL_USER'] = "root" or os.getenv("mysql_user")
-    app.config['MYSQL_PASSWORD'] = "M@nkeyBus!ne$$96!" or os.getenv("mysql_pwrd")
-    app.config["MYSQL_DB"] = "MovieRanker" or os.getenv("mysql_db_name")
+    app.config["MYSQL_HOST"] = db_url or os.getenv("mysql_host")
+    app.config['MYSQL_USER'] = os.getenv("mysql_user")
+    app.config['MYSQL_PASSWORD'] = os.getenv("mysql_pwrd")
+    app.config['MYSQL_DB'] = os.getenv("mysql_db_name")
     app.config["MYSQL_CURSORCLASS"] = 'DictCursor'
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
