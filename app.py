@@ -1,5 +1,5 @@
 import os
-
+from dotenv import load_dotenv
 from flask import Flask
 from flask_smorest import Api
 from flask import session
@@ -22,7 +22,7 @@ from secret import SECRET_API_KEY, SECRET_KEY
 
 def create_app(db_url=None):
     app = Flask(__name__)
-
+    load_dotenv
     app.config["PROPAGATE_EXCEPTIONS"] = True
     app.config["API_TITLE"] = "MovieRanker REST API"
     app.config["API_VERSION"] = "v1"
