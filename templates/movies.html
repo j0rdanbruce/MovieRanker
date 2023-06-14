@@ -25,17 +25,17 @@
 
     <div class="movie-content">
         <h1>Movie List:</h1>
-            {% for movie in movies %}
-            <form id="movie" method="post" action="{{ url_for('movies.add_movies') }}">
-                <ul>
-                    <h2>{{movie.title}}</h2>
-                    <li>{{movie.plot}}</li>
-                    <li><img src="{{movie.img_src}}" alt="Missing movie image"></li>
-                        <input type="checkbox" name="movie" id="movie" value="{{movie}}">
-                </ul>
-            {% endfor %}
-                <button type="submit" value="Add Movies">Submit</button>
-            </form>      
+        {% for movie in movies %}
+        <form id="movie" method="post" action="{{ url_for('movies.add_movies') }}">
+            <ul>
+                <h2>{{movie.title}}</h2>
+                <li>{{movie.plot}}</li>
+                <li><img src="{{movie.img_src}}" alt="Missing movie image"></li>
+                    <input type="checkbox" name="movie" id="movie" value="{{movie}}">
+            </ul>
+        {% endfor %}
+            <button type="submit" value="Add Movies">Submit</button>
+        </form>      
     </div>
     {% endblock %}
 </body>

@@ -5,6 +5,7 @@ from forms import RegistrationForm
 
 from models.forum import Forum
 from models.comment import Comment
+from models.movie import Movie
 
 class User:
     '''Module that represents a user. Perform operations relative to users like registering new users to application and adding user to session.'''
@@ -20,6 +21,7 @@ class User:
             self.username = username
         self.forum = Forum()
         self.comment = Comment(id)
+        self.movie = Movie()
     
     def get_user_by_id(self):
         cur = Cursor()

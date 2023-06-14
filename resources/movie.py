@@ -7,9 +7,8 @@ import urllib.request, json, urllib.error
 from secret import SECRET_API_KEY
 #flask form for searching movies
 from forms import SearchMovieForm
-
 from db import movies, mysql, Cursor
-
+from models.user import User
 from wrappers import login_required
 
 from schemas import PlainMovieSchema
@@ -97,11 +96,22 @@ def search_movie():
 def get_liked_movies():
     cur = Cursor()
     if request.method == "GET":
-        query = "select title, pic_url, plot, movie_id from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={}".format(int(session["id"]))
+        query = "select title, pic_url, plot, movie_rank, movie_id from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={} order by movie_rank ASC".format(int(session["id"]))
+        rank_query = "select movie_rank from Likes_Movie where user_id={} order by movie_rank asc".format(int(session["id"]))
+        rank_list = []
         movie_data = cur.get_all_rows(query)
-        return render_template("fave_movies.html", movies=movie_data)
+        for rank in cur.get_all_rows(rank_query):
+            rank_list.append(rank["movie_rank"])
+        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
     if request.method == "POST":
         movie_id = request.form.get("movie_id")
         query = "DELETE FROM Likes_Movie WHERE user_id={} AND movie_id={}".format(int(session["id"]), movie_id)
         cur.delete(query)
         return redirect(url_for("movies.get_liked_movies"))
+
+@blp.route("/user/movie/movie_list/movie_id:<string:movie_id>&current_rank:<string:current_rank>/change_rank", methods=["POST"])
+def change_rank(movie_id, current_rank):
+    new_rank = int(request.form.get("rank"))
+    user = User(int(session["id"]))
+    user.movie.changeRank(int(movie_id), int(current_rank), int(new_rank))
+    return redirect(url_for("movies.get_liked_movies"))
