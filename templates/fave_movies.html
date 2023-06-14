@@ -15,7 +15,25 @@
 </script>
 
 <style>
-
+  div.movie-content{
+    display: flex;
+    flex-direction: row;
+    border-style: solid;
+    border-radius: 5px;
+    width: 800px;
+    height: 150px;
+  }
+  div.movie-rank-box{
+    background-color: rgb(33, 134, 223);
+    width: 90px;
+  }
+  p.movie-rank-num{
+    font-size: 25px;
+  }
+  div.movie-image-box > img{
+    width: 110%;
+    height: auto;
+  }
 </style>
 
 <body>
@@ -27,18 +45,32 @@
 
   {% block main_content %}
     <h2>Favorite Movies:</h2>
-    <div class="movie-content">
-      {% for movie in movies %}
+    {% for movie in movies %}
+      <div class="movie-content">
+        <div class="movie-rank-box">
+          <p class="movie-rank-num"><strong>{{ movie.movie_rank }}</strong></p>
+          <form action="{{ url_for('movies.change_rank', movie_id=movie.movie_id, current_rank=movie.movie_rank) }}" method="post">
+            <select name="rank" id="movie-rank">
+              <option value=""></option>
+              {% for rank in rank_list %}
+                <option value="{{ rank }}">{{rank}}</option>
+              {% endfor %}
+            </select>
+            <button type="submit">Change <br>Rank</button>
+          </form>
+        </div>
+        <div class="movie-image-box">
+          <img src="{{ movie.pic_url }}" alt="Missing movie image">
+        </div>
         <ul>
           <li>{{ movie.title }}</li>
           <li>{{ movie.plot }}</li>
-          <li><img src="{{ movie.pic_url }}" alt="Missing movie image"></li>
         </ul>
         <form id="movie-submit-btn" method="post" action="{{ url_for('movies.get_liked_movies') }}">
           <button type="submit" name="movie_id" value="{{ movie.movie_id }}" onclick="return confWindow()">Remove</button>
         </form>
-      {% endfor %}
-    </div>
+      </div>
+    {% endfor %}
     
   {% endblock %}
 

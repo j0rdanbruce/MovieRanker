@@ -25,6 +25,9 @@ create table if not exists Likes_Movie(
     foreign key(user_id) references user(id),
     foreign key(movie_id) references Movie(id)
 );
+alter table Likes_Movie add column movie_rank int default(0);
+alter table Likes_Movie add column created datetime default(current_timestamp());
+alter table Likes_Movie add column modified datetime default(current_timestamp());
 
 create table if not exists Forum(
 	id int not null unique auto_increment,
