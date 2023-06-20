@@ -8,6 +8,7 @@ from secret import SECRET_API_KEY
 #flask form for searching movies
 from forms import SearchMovieForm
 from db import movies, mysql, Cursor
+from flask_mysqldb import MySQLdb
 from models.user import User
 from wrappers import login_required
 
@@ -50,16 +51,21 @@ class Movie(MethodView):
 @blp.route("/picked_movies", methods=["POST"])
 def add_movies():
     if request.method == "POST":
+        cursor = Cursor()
         movie_data = request.form.getlist("movie")
-        
+        lowest_rank = int(cursor.get_row("SELECT MAX(movie_rank) AS lowest_rank FROM Likes_Movie")["lowest_rank"])
         #open database connection
         cur = mysql.connection.cursor()
         query_1 = "INSERT INTO Movie(id, title, pic_url, plot) VALUES(%s, %s, %s, %s)"
-        query_2 = "INSERT INTO Likes_Movie(user_id, movie_id) VALUES(%s, %s)"
+        query_2 = "INSERT INTO Likes_Movie(user_id, movie_id, movie_rank) VALUES(%s, %s, %s)"
         for movie in movie_data:
             movie = json.loads(movie.replace('\'', '\"'))
-            cur.execute(query_1, (int(movie['id']), movie['title'], movie['img_src'], movie['plot']))
-            cur.execute(query_2, (int(session["id"]), int(movie["id"])))
+            lowest_rank = lowest_rank + 1
+            try:
+                cur.execute(query_1, (int(movie['id']), movie['title'], movie['img_src'], movie['plot']))
+            except MySQLdb.IntegrityError:
+                pass
+            cur.execute(query_2, (int(session["id"]), int(movie["id"]), lowest_rank))
         mysql.connection.commit()
         #close database connection
         cur.close()
@@ -105,8 +111,8 @@ def get_liked_movies():
         return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
     if request.method == "POST":
         movie_id = request.form.get("movie_id")
-        query = "DELETE FROM Likes_Movie WHERE user_id={} AND movie_id={}".format(int(session["id"]), movie_id)
-        cur.delete(query)
+        user = User(int(session["id"]))
+        user.movie.remove_movie(movie_id)
         return redirect(url_for("movies.get_liked_movies"))
 
 @blp.route("/user/movie/movie_list/movie_id:<string:movie_id>&current_rank:<string:current_rank>/change_rank", methods=["POST"])

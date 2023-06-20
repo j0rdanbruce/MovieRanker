@@ -27,3 +27,15 @@ class Movie():
                 self.cursor.update(update_query)
         else:
             pass
+    
+    def add_movie(self, ) -> None:
+        pass
+
+    def remove_movie(self, movie_id: int) -> None:
+        movie_rank = int(self.cursor.get_row("SELECT movie_rank FROM Likes_Movie WHERE user_id={} AND movie_id={}".format(int(session["id"]), int(movie_id)))["movie_rank"])
+        del_query = "DELETE FROM Likes_Movie WHERE user_id={} AND movie_id={}".format(int(session["id"]), movie_id)
+        movies = self.cursor.get_all_rows("SELECT movie_id, movie_rank FROM Likes_Movie WHERE movie_rank > {} AND user_id={}".format(movie_rank, int(session["id"])))
+        self.cursor.delete(del_query)
+        for movie in movies:
+            update_query = "UPDATE Likes_Movie SET movie_rank={} WHERE movie_id={} AND user_id={}".format((int(movie["movie_rank"])-1), int(movie["movie_id"]), int(session["id"]))
+            self.cursor.update(update_query)
