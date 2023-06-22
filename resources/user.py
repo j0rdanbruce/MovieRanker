@@ -1,7 +1,7 @@
 from flask_smorest import Blueprint
 from flask.views import MethodView
 from flask import render_template, flash, redirect, url_for, session
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, EditUserForm
 
 from db import mysql
 from models.user import User
@@ -36,6 +36,24 @@ def login():
         else:
             flash("Incorrect username or password")
     return render_template("login.html", form=form)
+
+@blp.route("/user/edit_info", methods=["GET", "POST"])
+@login_required
+def edit_info():
+    form = EditUserForm()
+    if form.validate_on_submit():
+        user = User(int(session["id"]))
+        fname = form.fname.data if form.fname.data is not "" else None
+        lname = form.lname.data if form.lname.data is not "" else None
+        email = form.email.data if form.email.data is not "" else None
+        username = form.username.data if form.username.data is not "" else None
+        pwrd = form.password.data if form.password.data is not "" else None
+        user.edit_info(fname, lname, email, username, pwrd)
+        flash("User info was changed successfully.")
+        #return redirect(url_for("user.login"))
+    else:
+        flash("user info was not updated.")
+    return render_template("settings.html", form=form)
 
 #logout of your account
 @blp.route("/logout", methods=["GET"])

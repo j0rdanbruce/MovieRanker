@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+</head>
+<style>
+
+</style>
+
+<body>
+  {% extends "layout.html" %}
+
+  {% block nav_bar %}
+    {{ super() }}
+  {% endblock %}
+
+  {% block main_content %}
+  <h2>Edit user info:</h2>
+  <div class="user-form">
+    <form action="" method="post">
+      {{ form.hidden_tag() }}
+      <div class="fname-box">
+        <label for="fname">First Name:</label> {{ form.fname() }}
+      </div>
+      <div class="lname-box">
+        <label for="lname">Last Name:</label> {{ form.lname() }}
+      </div>
+      <div class="email-box">
+        <label for="email">Email:</label> {{ form.email() }}
+      </div>
+      <div class="username-box">
+        <label for="username">Username:</label> {{ form.username() }}
+      </div>
+      <div class="password-box">
+        <label for="password">Password:</label> {{ form.password() }}
+      </div>
+      <div class="submit-box">
+        {{ form.submit(placeholder='Submit') }}
+      </div>
+    </form>
+    <br>
+        {% for message in get_flashed_messages() %}
+          <strong style="color: red;">{{ message }}</strong>
+        {% endfor %}
+    </div>
+  </div>
+  {% endblock %}
+</body>
+</html>

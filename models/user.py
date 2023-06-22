@@ -19,6 +19,7 @@ class User:
             self.pswrd = pswrd
         if username is not None:
             self.username = username
+        self.cursor = Cursor()
         self.forum = Forum()
         self.comment = Comment(id)
         self.movie = Movie()
@@ -100,4 +101,20 @@ class User:
         else:
             return False
     
-    #forum related functions here
+    #user info related functions here
+    def edit_info(self, fname:str=None, lname:str=None, email:str=None, username:str=None, pwrd:str=None):
+        if fname is not None:
+            query = "UPDATE user set fname='{}' where id={}".format(fname, self.id)
+            self.cursor.update(query)
+        if lname is not None:
+            query = "UPDATE user set lname='{}' where id={}".format(lname, int(self.id))
+            self.cursor.update(query)
+        if email is not None:
+            query = "UPDATE user set email='{}' where id={}".format(email, self.id)
+            self.cursor.update(query)
+        if username is not None:
+            query = "UPDATE user set username='{}' where id={}".format(username, self.id)
+            self.cursor.update(query)
+        if pwrd is not None:
+            query = "UPDATE user set pwrd_hash='{}' where id={}".format(pwrd, self.id)
+            self.cursor.update(query)
