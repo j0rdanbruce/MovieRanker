@@ -5,11 +5,9 @@ from forms import RegistrationForm, LoginForm, EditUserForm
 
 from db import mysql
 from models.user import User
-
 #wrapper functions here
 from wrappers import login_required
-
-#from schemas import PlainUserSchema
+import random
 
 blp = Blueprint("user", __name__, description="operations for login")
 
@@ -37,17 +35,33 @@ def login():
             flash("Incorrect username or password")
     return render_template("login.html", form=form)
 
+#login as a guest user
+@blp.route("/guest_login", methods=["GET"])
+def login_guest():
+    '''cursor = mysql.connection.cursor()
+    rand_id = random.randint(1, 10000)
+    exist_query = "SELECT EXISTS(SELECT * FROM user WHERE id={}) AS user_exists".format(rand_id)
+    cursor.execute(exist_query)
+    result = cursor.fetchone()
+    while (result["user_exists"]) == 1:
+        rand_id = random.randint(1, 10000)
+        result = cursor.execute(exist_query)
+    cursor.close()'''
+    session["id"] = 0
+    session["is_guest"] = "active"
+    return redirect(url_for("user.home_page"))
+
 @blp.route("/user/edit_info", methods=["GET", "POST"])
 @login_required
 def edit_info():
     form = EditUserForm()
     if form.validate_on_submit():
         user = User(int(session["id"]))
-        fname = form.fname.data if form.fname.data is not "" else None
-        lname = form.lname.data if form.lname.data is not "" else None
-        email = form.email.data if form.email.data is not "" else None
-        username = form.username.data if form.username.data is not "" else None
-        pwrd = form.password.data if form.password.data is not "" else None
+        fname = form.fname.data if form.fname.data != "" else None
+        lname = form.lname.data if form.lname.data != "" else None
+        email = form.email.data if form.email.data != "" else None
+        username = form.username.data if form.username.data != "" else None
+        pwrd = form.password.data if form.password.data != "" else None
         user.edit_info(fname, lname, email, username, pwrd)
         flash("User info was changed successfully.")
         #return redirect(url_for("user.login"))
@@ -60,6 +74,8 @@ def edit_info():
 @login_required
 def logout():
     session.pop("id")
+    if "is_guest" in session:
+        session.pop("is_guest")
     flash("You were logged out successfully.", "success")
     return redirect(url_for("user.login"))
 
@@ -67,14 +83,12 @@ def logout():
 @blp.route("/home", methods=["GET"])
 @login_required
 def home_page():
-    cur = mysql.connection.cursor()
-    query = "SELECT username FROM user WHERE id={}".format(int(session["id"]))
-    cur.execute(query)
-    data = cur.fetchone()
-    cur.close()
-    return render_template("home_page.html", username=data['username'])
-
-#forum related functions go here
+    if "is_guest" in session:
+        user = User(session["id"])
+        user.username = "Guest" + str(session["id"])
+    else:
+        user = User(session["id"])
+    return render_template("home_page.html", username=user.username)
 
 
 
