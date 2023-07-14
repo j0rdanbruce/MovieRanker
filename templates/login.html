@@ -75,7 +75,7 @@
       <div>{{ form.submit() }}</div>
       <p class="or-box"><span>OR</span></p>
       <div class="guest-box">
-        <a href="#">Continue as Guest</a>
+        <a href="{{ url_for('user.login_guest') }}">Continue as Guest</a>
       </div>
       <br>
       {% for message in get_flashed_messages() %}

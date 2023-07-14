@@ -10,7 +10,7 @@ from forms import SearchMovieForm
 from db import movies, mysql, Cursor
 from flask_mysqldb import MySQLdb
 from models.user import User
-from wrappers import login_required
+from wrappers import login_required, sub_user_required
 
 from schemas import PlainMovieSchema
 
@@ -99,6 +99,7 @@ def search_movie():
 #application endpoint for users to view their liked movie list
 @blp.route("/user/movie/movie_list", methods=["GET", "POST"])
 @login_required
+@sub_user_required
 def get_liked_movies():
     cur = Cursor()
     if request.method == "GET":

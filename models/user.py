@@ -10,9 +10,11 @@ from models.movie import Movie
 class User:
     '''Module that represents a user. Perform operations relative to users like registering new users to application and adding user to session.'''
     def __init__(self, id:int=None, email:str=None, pswrd:str=None, username:str=None) -> None:
-        if id is not None:
+        if id is not None and "is_guest" not in session:
             self.id = id
             self.get_user_by_id()
+        else:
+            self.id = id
         if email is not None:
             self.email = email
         if pswrd is not None:
@@ -30,7 +32,6 @@ class User:
         result = cur.get_row(query) 
         self.email, self.pswrd, self.username = result["email"], result["pwrd_hash"], result["username"]
 
-    
     def get_email(self) -> str:
         cur = Cursor()
         query = "SELECT email from user WHERE id={}".format(self.id)
