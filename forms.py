@@ -18,6 +18,24 @@ class LoginForm(FlaskForm):
     #remember = BooleanField('Remember Me',validators= [DataRequired()])
     submit = SubmitField('Login')
 
+class EditUserForm(FlaskForm):
+    fname = StringField('First Name')
+    lname = StringField('Last Name')
+    email = StringField('Email')
+    username = StringField('Username')
+    password = StringField('Password')
+    submit = SubmitField('Submit')
+
 class SearchMovieForm(FlaskForm):
     title = StringField('Movie Title', validators=[DataRequired()])
     search = SubmitField('Search Movie')
+
+class ForumForm(FlaskForm):
+    title = StringField('Forum Title', validators=[DataRequired()])
+    body = StringField(validators=[DataRequired()])
+    private = BooleanField('Private?')
+    post = SubmitField('Post')
+
+class CommentForm(FlaskForm):
+    body = StringField('Write your heart out!', validators=[DataRequired()])
+    comment = SubmitField('Comment')

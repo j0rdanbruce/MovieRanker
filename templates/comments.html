@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+</head>
+
+<script type="text/javascript">
+  function upVote(element){
+    var voteType = element.getAttribute("data-vote-type");
+    var forumID = element.getAttribute("data-forum-id");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+      if (this.readyState==4 && this.status==200){
+        document.getElementById(forumID).innerHTML = this.responseText;
+    }};
+    xhttp.open("POST", "{{ url_for('forum.upVote') }}", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("forum_id="+forumID+"&vote_type="+voteType);
+  }
+  function openCommentSctn(){
+    const btn = document.getElementById("comment-sctn");
+    const btnStyle = window.getComputedStyle(btn);
+    var dropDownBtn = document.getElementById("drop-down-btn");
+    if (btnStyle.display == "none"){
+      btn.style.display = "block";
+      dropDownBtn.innerHTML = "&#9650;";
+    } else{
+      btn.style.display = "none";
+      dropDownBtn.innerHTML = "&#9660;"
+    }
+  }
+</script>
+
+<style>
+  p#username{
+    color: rgb(100, 100, 123);
+    font-size: 15px;
+  }
+  div.down-arrow{
+    /*code for flipping the image*/
+    transform: scale(1, -1);
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    transform: scale(1, -1);
+    /*end code for flipped image*/
+  }
+  div.comment-body > input{
+    width: 500px;
+    height: 200px;
+    border-radius: 5px;
+  }
+  button.comment-dropdown-btn{
+    height: 32px;
+    width: 90%;
+    margin: auto;
+    position: relative;
+    border-radius: 5px;
+    background-color: white;
+  }
+  div.comment-form{
+    display: none;
+  }
+  div.comments-sctn{
+    border-style: solid;
+  }
+  div.comments-sctn div{
+    background-color: aliceblue;
+    margin-top: auto;
+    margin-bottom: 10px;
+  }
+  div.comment-top-box p{
+    font-size: 14px;
+    color: rgb(100, 100, 123);
+  }
+</style>
+
+<body>
+  {% extends "layout.html" %}
+
+  {% block main_content %}
+    <div class="forum-box">
+      <div class="left-box">
+        <div class="up-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="upvote">&#8679;</a></div>
+        <div class="votes-box"><strong id="{{ forum.id }}">{{ forum.votes }}</strong></div>
+        <div class="down-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="downvote">&#8679;</a></div>
+      </div>
+      <div class="right-box">
+        <p id="username">Posted by {{ forum.username }}</p>
+        <h3>{{ forum.title }} : {{ forum.id }}</h3>
+        <p>{{ forum.body }}</p>
+      </div>
+    </div>
+    <br>
+    <div class="comment-form" id="comment-sctn">
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="comment-body">
+          {{ form.body(placeholder='Type your heart out!') }}
+          {% for error in form.body.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        <div class="comment-submit-btn">
+          {{ form.comment() }}
+        </div>
+      </form>
+    </div>
+    <button class="comment-dropdown-btn" id="drop-down-btn" style="font-size: 20px;" onclick="openCommentSctn()">&#9660;</button>
+    <br>
+    <div class="comments-sctn">
+      {% for comment in comments %}
+        <div class="comment-top-box">
+          <p>{{ comment.username }} · Posted on {{ comment.created }}</p>
+        </div>
+        <div class="comment-mid-box">
+          <p>{{ comment.body }}</p>
+        </div>
+        <div class="comment-bottom-box">
+          <p>like and dislike section will go here</p>
+        </div>
+      {% endfor %}
+    </div>
+  {% endblock %}
+</body>
+
+<footer></footer>
+
+</html>
