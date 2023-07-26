@@ -11,7 +11,14 @@
         margin-left: 45px;
     }
 </style>
-<script>
+<script type="text/javascript">
+    function addMovie(element){
+        var movieId = element.getAttribute("data-movie-btn-id");
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "{{ url_for('movies.add_movies') }}", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("movie_id="+movieId);
+    }
 </script>
 <body>
     {% extends "layout.html" %}
@@ -24,25 +31,39 @@
     <div class="movie-content">
         <h1>Movie List:</h1>
         {% if 'is_guest' not in session %}
+        <table class="movie-title-head">
+            <tr>
+                <th>Movie Thumbnail</th>
+                <th>Movie Title</th>
+                <th>Plot</th>
+                <th>Add to My List</th>
+            </tr>
             {% for movie in movies %}
-            <form id="movie" method="post" action="{{ url_for('movies.add_movies') }}">
-                <ul>
-                    <h2>{{movie.title}}</h2>
-                    <li>{{movie.plot}}</li>
-                    <li><img src="{{movie.img_src}}" alt="Missing movie image"></li>
-                        <input type="checkbox" name="movie" id="movie" value="{{movie}}">
-                </ul>
+                <tr>
+                    <td><img src="{{movie.img_src}}" alt="Missing movie image"></td>
+                    <td>{{movie.title}}</td>
+                    <td>{{movie.plot}}</td>
+                    <td><button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}">Add Movie</button></td>
+                </tr>
             {% endfor %}
-                <button type="submit" value="Add Movies">Submit</button>
-            </form>
+        </table>
         {% else %}
-            {% for movie in movies %}
-            <ul>
-                <h2>{{movie.title}}</h2>
-                <li>{{movie.plot}}</li>
-                <li><img src="{{movie.img_src}}" alt="Missing movie image"></li>
-            </ul>
-            {% endfor %}
+            <table class="movie-title-head">
+                <tr>
+                    <th>Movie Thumbnail</th>
+                    <th>Movie Title</th>
+                    <th>Plot</th>
+                    <th>Add to My List</th>
+                </tr>
+                {% for movie in movies %}
+                    <tr>
+                        <td><img src="{{movie.img_src}}" alt="Missing movie image"></td>
+                        <td>{{movie.title}}</td>
+                        <td>{{movie.plot}}</td>
+                        <td><button>Add Movie</button></td>
+                    </tr>
+                {% endfor %}
+            </table>
         {% endif %}
     </div>
     {% endblock %}
