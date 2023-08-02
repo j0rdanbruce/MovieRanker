@@ -14,3 +14,9 @@ class TMDB_API():
         movie_search_url = self.base_url + "/movie/{}".format(movie_id)
         response = requests.get(movie_search_url, headers=self.headers)
         return json.loads(response.text)
+    
+    def find_streaming_service_for(self, movie_id: int) -> dict:
+        '''returns dictionary of streaming services to watch a given movie'''
+        stream_url = "https://api.themoviedb.org/3/movie/348/watch/providers"
+        response = requests.get(stream_url, headers=self.headers)
+        return json.loads(response.text)

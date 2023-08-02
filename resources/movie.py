@@ -11,7 +11,7 @@ from db import movies, mysql, Cursor
 from flask_mysqldb import MySQLdb
 from models.user import User
 from wrappers import login_required, sub_user_required
-
+from forms import SearchMovieForm
 from schemas import PlainMovieSchema
 
 blp = Blueprint("movies", __name__, description="Operations for movies")
@@ -47,7 +47,7 @@ class Movie(MethodView):
         pass
 
 
-#reutrn string dictionary of picked movies. this is not optimal. sending dictionary from html in string form. fix later.
+#function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
 @login_required
 @sub_user_required
@@ -60,7 +60,7 @@ def add_movies():
     else:
         return {"message": "unsuccessful attempt"}
 
-#TMDB Api calls here
+#endpoint for searching movies
 @blp.route("/search/movie", methods=["POST", "GET"])
 def search_movie():
     form = SearchMovieForm()
@@ -80,8 +80,8 @@ def search_movie():
                 "img_src": base_movie_url + str(movie["backdrop_path"])
             }
             movie_list.append(movie_data)
-        return render_template("movies.html", movies=movie_list)
-    return render_template("search.html", form=form)
+        return render_template("movies.html", form=form, movies=movie_list)
+    return render_template("movies.html", form=form)
 
 #application endpoint for users to view their liked movie list
 @blp.route("/user/movie/movie_list", methods=["GET", "POST"])
