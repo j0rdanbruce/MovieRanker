@@ -11,7 +11,7 @@ from db import movies, mysql, Cursor
 from flask_mysqldb import MySQLdb
 from models.user import User
 from wrappers import login_required, sub_user_required
-
+from forms import SearchMovieForm
 from schemas import PlainMovieSchema
 
 blp = Blueprint("movies", __name__, description="Operations for movies")
@@ -47,33 +47,20 @@ class Movie(MethodView):
         pass
 
 
-#reutrn string dictionary of picked movies. this is not optimal. sending dictionary from html in string form. fix later.
+#function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
+@login_required
+@sub_user_required
 def add_movies():
     if request.method == "POST":
-        cursor = Cursor()
-        movie_data = request.form.getlist("movie")
-        lowest_rank = int(cursor.get_row("SELECT MAX(movie_rank) AS lowest_rank FROM Likes_Movie")["lowest_rank"])
-        #open database connection
-        cur = mysql.connection.cursor()
-        query_1 = "INSERT INTO Movie(id, title, pic_url, plot) VALUES(%s, %s, %s, %s)"
-        query_2 = "INSERT INTO Likes_Movie(user_id, movie_id, movie_rank) VALUES(%s, %s, %s)"
-        for movie in movie_data:
-            movie = json.loads(movie.replace('\'', '\"'))
-            lowest_rank = lowest_rank + 1
-            try:
-                cur.execute(query_1, (int(movie['id']), movie['title'], movie['img_src'], movie['plot']))
-            except MySQLdb.IntegrityError:
-                pass
-            cur.execute(query_2, (int(session["id"]), int(movie["id"]), lowest_rank))
-        mysql.connection.commit()
-        #close database connection
-        cur.close()
-        return redirect(url_for('user.home_page'))
+        user = User(int(session["id"]))
+        movie_id = int(request.form.get("movie_id"))
+        user.movie.add_movie(movie_id=movie_id)
+        return {"message": "successfully added movie to my movie list"}
     else:
         return {"message": "unsuccessful attempt"}
 
-#TMDB Api calls here
+#endpoint for searching movies
 @blp.route("/search/movie", methods=["POST", "GET"])
 def search_movie():
     form = SearchMovieForm()
@@ -93,8 +80,8 @@ def search_movie():
                 "img_src": base_movie_url + str(movie["backdrop_path"])
             }
             movie_list.append(movie_data)
-        return render_template("movies.html", movies=movie_list)
-    return render_template("search.html", form=form)
+        return render_template("movies.html", form=form, movies=movie_list)
+    return render_template("movies.html", form=form)
 
 #application endpoint for users to view their liked movie list
 @blp.route("/user/movie/movie_list", methods=["GET", "POST"])

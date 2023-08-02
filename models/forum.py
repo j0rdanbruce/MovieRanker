@@ -18,7 +18,7 @@ class Forum():
             return result
 
     def get_all_forums(self) -> list[dict]:
-        query = "select id, title, body, upvote - downvote as votes from Forum LIMIT 50"
+        query = "select id, title, body, upvote - downvote as votes from Forum ORDER BY votes DESC LIMIT 50"
         result = self.cursor.get_all_rows(query)
         if result:
             return result

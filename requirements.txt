@@ -8,3 +8,4 @@ Flask-WTF
 flask_mysqldb
 Flask-Session
 gunicorn
+requests
