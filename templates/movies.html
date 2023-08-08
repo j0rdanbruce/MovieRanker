@@ -21,16 +21,102 @@
         font-size: 20px;
     }
     div.search-btn > input{
+        cursor: pointer;
         height: 100%;
         border-top-right-radius: 10px;
         border-bottom-right-radius: 10px;
     }
-    div.movie-content li{
-        margin-left: 45px;
+    div.movie-content-container{
+        display: flex;
+        flex-wrap: wrap;
     }
-    td#movie-thumbnail > img{
-        height: auto;
+    div.movie-card{
+        display: flex;
+        flex-direction: column;
+        background-color: aliceblue;
+        height: 400px;
+        width: 200px;
+        position: relative;
+        border-radius: 10px;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+    span.movie-card-top-box{
+        background-color: rgb(33, 134, 223);
+        width: 100%;
+        height: 55px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        position: relative;
+        margin-top: 0px;
+    }
+    #movie-title{
+        height: 100%;
+        width: 170px;
+        position: relative;
+        text-align: center;
+    }
+    #add-movie-btn{
+        height: 100%;
+        width: 30px;
+        border-top-right-radius: 10px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        font-size: 24px;
+    }
+    #add-movie-btn:hover{
+        cursor: pointer;
+        font-size: 32px;
+        background-color: green;
+    }
+    .message-box{
+        display: none;
+        position: fixed;
+        top: 70px;
+        right: 50px;
+        background-color: rgb(194, 144, 36);
+        height: 100px;
         width: 300px;
+        border-radius: 5px;
+        font-size: large;
+        text-align: center;
+    }
+    #add-movie-btn:hover .message-box{
+        display: block;
+    }
+    #movie-plot{
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
+        font-size: 15px;
+    }
+    img#movie-thumbnail{
+        background-color: aquamarine;
+        width: auto;
+        height: auto;
+        min-height: 120px;
+        position: relative;
+    }
+    #info-dropdown-btn{
+        all: unset;
+        cursor: pointer;
+        background-color: rgb(65, 97, 150);
+        height: 30px;
+        width: 100%;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        position: absolute;
+        bottom: 0px;
+        text-align: center;
+        text-decoration: none;
+    }
+    #info-dropdown-btn:hover{
+        font-size: larger;
+    }
+    #info-dropdown-btn:active{
+        color: black;
     }
 </style>
 <script type="text/javascript">
@@ -41,6 +127,20 @@
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("movie_id="+movieId);
     }
+    function dropDownCard(element){
+        var movieCard = element.parentElement;
+        var infoBtn = element;
+        var cardStatus = movieCard.dataset.movieCardStatus;
+        if (cardStatus == "closed"){
+            movieCard.dataset.movieCardStatus = "open";
+            movieCard.style.height = "auto";
+            infoBtn.innerHTML = "Close Info &#9650;";
+        }else{
+            movieCard.dataset.movieCardStatus = "closed";
+            movieCard.style.height = "400px";
+            infoBtn.innerHTML = "More Info &#9660;";
+        }
+    }
 </script>
 <body>
     {% extends "layout.html" %}
@@ -50,6 +150,7 @@
     {% endblock %}
 
     {% block main_content %}
+    <div class="message-box"></div>
     <form class="movie-form" action="" method="post">
         {{ form.hidden_tag() }}
         <div class="search-box">
@@ -65,25 +166,28 @@
         {% endfor %}
     </form>
     {% if movies %}
-        <div class="movie-content">
-            <h1>Movie List:</h1>
+        <h1>Movie List:</h1>
+        <div class="movie-content-container">
             {% if 'is_guest' not in session %}
-            <table class="movie-title-head">
-                <tr>
-                    <th>Movie Thumbnail</th>
-                    <th>Movie Title</th>
-                    <th>Plot</th>
-                    <th>Add to My List</th>
-                </tr>
                 {% for movie in movies %}
-                    <tr>
-                        <td id="movie-thumbnail"><img src="{{movie.img_src}}" alt="Missing movie image"></td>
-                        <td>{{movie.title}}</td>
-                        <td>{{movie.plot}}</td>
-                        <td><button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}">Add Movie</button></td>
-                    </tr>
+                    <div class="movie-card" data-movie-card-id="{{ movie.id }}" data-movie-card-status="closed">
+                        <span class="movie-card-top-box">
+                            <p id="movie-title"><strong>{{ movie.title }}</strong></p>
+                            <button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}"><strong>+</strong>
+                                <div class="message-box"><p>Add this movie to your Favorite Movie List?</p></div>
+                            </button>
+                        </span>
+                        <img src="{{ movie.img_src }}" alt="missing movie image" id="movie-thumbnail">
+                        <p id="movie-plot">{{ movie.plot }}</p>
+                        <br>
+                        <button href="#" id="info-dropdown-btn" onclick="dropDownCard(this)"><strong>More Info &#9660;</strong></button>
+                    </div>
                 {% endfor %}
-            </table>
+
+
+
+
+
             {% else %}
                 <table class="movie-title-head">
                     <tr>
