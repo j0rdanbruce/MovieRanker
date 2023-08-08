@@ -7,11 +7,11 @@ import urllib.request, json, urllib.error
 from secret import SECRET_API_KEY
 #flask form for searching movies
 from forms import SearchMovieForm
-
 from db import movies, mysql, Cursor
-
-from wrappers import login_required
-
+from flask_mysqldb import MySQLdb
+from models.user import User
+from wrappers import login_required, sub_user_required
+from forms import SearchMovieForm
 from schemas import PlainMovieSchema
 
 blp = Blueprint("movies", __name__, description="Operations for movies")
@@ -47,28 +47,20 @@ class Movie(MethodView):
         pass
 
 
-#reutrn string dictionary of picked movies. this is not optimal. sending dictionary from html in string form. fix later.
+#function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
+@login_required
+@sub_user_required
 def add_movies():
     if request.method == "POST":
-        movie_data = request.form.getlist("movie")
-        
-        #open database connection
-        cur = mysql.connection.cursor()
-        query_1 = "INSERT INTO Movie(id, title, pic_url, plot) VALUES(%s, %s, %s, %s)"
-        query_2 = "INSERT INTO Likes_Movie(user_id, movie_id) VALUES(%s, %s)"
-        for movie in movie_data:
-            movie = json.loads(movie.replace('\'', '\"'))
-            cur.execute(query_1, (int(movie['id']), movie['title'], movie['img_src'], movie['plot']))
-            cur.execute(query_2, (int(session["id"]), int(movie["id"])))
-        mysql.connection.commit()
-        #close database connection
-        cur.close()
-        return redirect(url_for('user.home_page'))
+        user = User(int(session["id"]))
+        movie_id = int(request.form.get("movie_id"))
+        user.movie.add_movie(movie_id=movie_id)
+        return {"message": "successfully added movie to my movie list"}
     else:
         return {"message": "unsuccessful attempt"}
 
-#TMDB Api calls here
+#endpoint for searching movies
 @blp.route("/search/movie", methods=["POST", "GET"])
 def search_movie():
     form = SearchMovieForm()
@@ -88,20 +80,32 @@ def search_movie():
                 "img_src": base_movie_url + str(movie["backdrop_path"])
             }
             movie_list.append(movie_data)
-        return render_template("movies.html", movies=movie_list)
-    return render_template("search.html", form=form)
+        return render_template("movies.html", form=form, movies=movie_list)
+    return render_template("movies.html", form=form)
 
 #application endpoint for users to view their liked movie list
 @blp.route("/user/movie/movie_list", methods=["GET", "POST"])
 @login_required
+@sub_user_required
 def get_liked_movies():
     cur = Cursor()
     if request.method == "GET":
-        query = "select title, pic_url, plot, movie_id from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={}".format(int(session["id"]))
+        query = "select title, pic_url, plot, movie_rank, movie_id from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={} order by movie_rank ASC".format(int(session["id"]))
+        rank_query = "select movie_rank from Likes_Movie where user_id={} order by movie_rank asc".format(int(session["id"]))
+        rank_list = []
         movie_data = cur.get_all_rows(query)
-        return render_template("fave_movies.html", movies=movie_data)
+        for rank in cur.get_all_rows(rank_query):
+            rank_list.append(rank["movie_rank"])
+        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
     if request.method == "POST":
         movie_id = request.form.get("movie_id")
-        query = "DELETE FROM Likes_Movie WHERE user_id={} AND movie_id={}".format(int(session["id"]), movie_id)
-        cur.delete(query)
+        user = User(int(session["id"]))
+        user.movie.remove_movie(movie_id)
         return redirect(url_for("movies.get_liked_movies"))
+
+@blp.route("/user/movie/movie_list/movie_id:<string:movie_id>&current_rank:<string:current_rank>/change_rank", methods=["POST"])
+def change_rank(movie_id, current_rank):
+    new_rank = int(request.form.get("rank"))
+    user = User(int(session["id"]))
+    user.movie.changeRank(int(movie_id), int(current_rank), int(new_rank))
+    return redirect(url_for("movies.get_liked_movies"))

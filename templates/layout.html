@@ -16,6 +16,7 @@
         background-color: rgb(33, 134, 223);
         position: -webkit-sticky;
         position: sticky;
+        height: 50px;
     }
     .top-navbar li{
         display: inline-block;
@@ -28,9 +29,17 @@
         position: relative;
         left: -100px;
     }
+    #settings-link{
+        position: relative;
+        left: 1500px;
+        width: 200%;
+        height: 50%;
+        font-size: 30px;
+    }
     #right-link{
         position: relative;
-        left: 1450px;
+        left: 1540px;
+        width: auto;
     }
     .side-navbar{
         background-color: lightgray;
@@ -72,6 +81,7 @@
             <ul>
                 <li><a id="left-link" href="{{ url_for('other.showIndex') }}">Home</a></li>
                 {% if "id" in session %}
+                  <li><a id="settings-link" href="{{ url_for('user.edit_info') }}">&#9881;</a></li>
                   <li><a id="right-link" href="{{ url_for('user.logout') }}">Sign out</a></li>
                 {% else %}
                   <li><a id="right-link" href="{{ url_for('user.login') }}">Login | Sign Up</a></li>
@@ -87,7 +97,7 @@
                 <li><a href="#">Search for Actors</a></li>
                 <li><a href="{{ url_for('forum.get_forums') }}">Public Movie Forum</a></li>
                 <li><a href="{{ url_for('forum.create_forum') }}">Add a Forum</a></li>
-                {% if "id" in session %}
+                {% if "id" in session and "is_guest" not in session %}
                   <li><a href="{{ url_for('movies.get_liked_movies') }}">My Favorite Movies</a></li>
                 {% endif %}
                 

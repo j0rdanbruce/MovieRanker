@@ -5,21 +5,26 @@ from forms import RegistrationForm
 
 from models.forum import Forum
 from models.comment import Comment
+from models.movie import Movie
 
 class User:
     '''Module that represents a user. Perform operations relative to users like registering new users to application and adding user to session.'''
     def __init__(self, id:int=None, email:str=None, pswrd:str=None, username:str=None) -> None:
-        if id is not None:
+        if id is not None and "is_guest" not in session:
             self.id = id
             self.get_user_by_id()
+        else:
+            self.id = id
         if email is not None:
             self.email = email
         if pswrd is not None:
             self.pswrd = pswrd
         if username is not None:
             self.username = username
+        self.cursor = Cursor()
         self.forum = Forum()
         self.comment = Comment(id)
+        self.movie = Movie()
     
     def get_user_by_id(self):
         cur = Cursor()
@@ -27,7 +32,6 @@ class User:
         result = cur.get_row(query) 
         self.email, self.pswrd, self.username = result["email"], result["pwrd_hash"], result["username"]
 
-    
     def get_email(self) -> str:
         cur = Cursor()
         query = "SELECT email from user WHERE id={}".format(self.id)
@@ -98,4 +102,20 @@ class User:
         else:
             return False
     
-    #forum related functions here
+    #user info related functions here
+    def edit_info(self, fname:str=None, lname:str=None, email:str=None, username:str=None, pwrd:str=None):
+        if fname is not None:
+            query = "UPDATE user set fname='{}' where id={}".format(fname, self.id)
+            self.cursor.update(query)
+        if lname is not None:
+            query = "UPDATE user set lname='{}' where id={}".format(lname, int(self.id))
+            self.cursor.update(query)
+        if email is not None:
+            query = "UPDATE user set email='{}' where id={}".format(email, self.id)
+            self.cursor.update(query)
+        if username is not None:
+            query = "UPDATE user set username='{}' where id={}".format(username, self.id)
+            self.cursor.update(query)
+        if pwrd is not None:
+            query = "UPDATE user set pwrd_hash='{}' where id={}".format(pwrd, self.id)
+            self.cursor.update(query)

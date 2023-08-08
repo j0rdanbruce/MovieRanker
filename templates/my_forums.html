@@ -54,16 +54,18 @@
           {% endfor %}
         </div>
         <br>
-        <div class="private-box">
-          <fieldset>
-            <legend>Is you forum private?</legend>
-            {{ form.private() }}
-            <label for="check-box">Private</label>
-          </fieldset>
-          {% for error in form.private.errors %}
-            <p>{{ error }}</p>
-          {% endfor %}
-        </div>
+        {% if "is_guest" not in session %}
+          <div class="private-box">
+            <fieldset>
+              <legend>Is you forum private?</legend>
+              {{ form.private() }}
+              <label for="check-box">Private</label>
+            </fieldset>
+            {% for error in form.private.errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
         <br>
         <div class="submit-btn">
           {{ form.post() }}
