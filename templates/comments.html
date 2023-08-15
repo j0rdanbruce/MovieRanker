@@ -26,10 +26,10 @@
     var dropDownBtn = document.getElementById("drop-down-btn");
     if (btnStyle.display == "none"){
       btn.style.display = "block";
-      dropDownBtn.innerHTML = "&#9650;";
+      dropDownBtn.innerHTML = "Close Comment &#9650;";
     } else{
       btn.style.display = "none";
-      dropDownBtn.innerHTML = "&#9660;"
+      dropDownBtn.innerHTML = "Open Comment &#9660;"
     }
   }
 </script>
@@ -172,7 +172,7 @@
         </div>
       </form>
     </div>
-    <button class="comment-dropdown-btn" id="drop-down-btn" style="font-size: 20px;" onclick="openCommentSctn()">Comment &#9660;</button>
+    <button class="comment-dropdown-btn" id="drop-down-btn" style="font-size: 20px;" onclick="openCommentSctn()">Open Comment &#9660;</button>
     <br>
     <div class="comments-sctn">
       {% for comment in comments %}
