@@ -9,3 +9,4 @@ flask_mysqldb
 Flask-Session
 gunicorn
 requests
+Flask-FontAwesome
