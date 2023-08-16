@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Ranker</title>
+    {{ fontawesome_html() }}
 </head>
 
 <script type="text/javascript">
@@ -26,18 +27,37 @@
     var dropDownBtn = document.getElementById("drop-down-btn");
     if (btnStyle.display == "none"){
       btn.style.display = "block";
-      dropDownBtn.innerHTML = "&#9650;";
+      dropDownBtn.innerHTML = "Close Comment &#9650;";
     } else{
       btn.style.display = "none";
-      dropDownBtn.innerHTML = "&#9660;"
+      dropDownBtn.innerHTML = "Open Comment &#9660;"
     }
   }
 </script>
 
 <style>
-  p#username{
-    color: rgb(100, 100, 123);
-    font-size: 15px;
+  div.forum-box{
+    padding-top: 8px;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    width: 775px;
+    position: relative;
+  }
+  div.left-box{
+    background-color: rgb(33, 134, 223);
+    height: auto;
+    width: 20px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    padding-top: 20px;
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+  div.left-box > div{
+    text-align: center;
   }
   div.down-arrow{
     /*code for flipping the image*/
@@ -49,27 +69,99 @@
     transform: scale(1, -1);
     /*end code for flipped image*/
   }
+  div.right-box{
+    background-color: aliceblue;
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-top: 20px;
+    padding-left: 8px;
+    padding-right: 10px;
+  }
+  p#username{
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: rgb(100, 100, 123);
+    font-size: 15px;
+  }
+  div.right-box > h3{
+    position: relative;
+    margin-top: 5px;
+  }
+  p#forum-body{
+    position: relative;
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+  div.comment-form{
+    display: none;
+    position: relative;
+  }
+  div.comment-form > form{
+    position: relative;
+    margin-left: 0px;
+    padding-left: 10px;
+  }
   div.comment-body > input{
+    position: relative;
     width: 500px;
     height: 200px;
     border-radius: 5px;
   }
+  div.comment-submit-btn > input{
+    margin-bottom: 8px;
+    position: relative;
+    width: 507px;
+    height: 35px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  div.comment-submit-btn > input:hover{
+    font-size: large;
+    font-weight: bold;
+  }
   button.comment-dropdown-btn{
     height: 32px;
-    width: 90%;
+    width: 50%;
     margin: auto;
     position: relative;
     border-radius: 5px;
     background-color: white;
-  }
-  div.comment-form{
-    display: none;
+    cursor: pointer;
   }
   div.comments-sctn{
-    border-style: solid;
+    background-color: aliceblue;
+    position: relative;
+    height: 100%;
+    width: 775px;
+    bottom: 0px;
+    padding: 8px;
+    margin-top: 8px;
+  }
+  div.single-comment-box{
+    display: flex;
+    flex-direction: row;
+    position: relative;
+  }
+  div.comment-left-box{
+    position: relative;
+    top: -78px;
+    left: 0px;
+    padding-right: 5px;
+  }
+  #user-icon{
+    font-size: 25px;
+  }
+  div.comment-right-box{
+    position: relative;
+    height: 100%;
+    top: 0px;
+    right: 0px;
   }
   div.comments-sctn div{
-    background-color: aliceblue;
     margin-top: auto;
     margin-bottom: 10px;
   }
@@ -91,8 +183,8 @@
       </div>
       <div class="right-box">
         <p id="username">Posted by {{ forum.username }}</p>
-        <h3>{{ forum.title }} : {{ forum.id }}</h3>
-        <p>{{ forum.body }}</p>
+        <h3>{{ forum.title }}</h3>
+        <p id="forum-body">{{ forum.body }}</p>
       </div>
     </div>
     <br>
@@ -110,19 +202,26 @@
         </div>
       </form>
     </div>
-    <button class="comment-dropdown-btn" id="drop-down-btn" style="font-size: 20px;" onclick="openCommentSctn()">&#9660;</button>
+    <button class="comment-dropdown-btn" id="drop-down-btn" style="font-size: 20px;" onclick="openCommentSctn()">Open Comment &#9660;</button>
     <br>
     <div class="comments-sctn">
       {% for comment in comments %}
-        <div class="comment-top-box">
-          <p>{{ comment.username }} · Posted on {{ comment.created }}</p>
+      <div class="single-comment-box">
+        <div class="comment-left-box">
+          <i class="fas fa-user-circle" id="user-icon"></i>
         </div>
-        <div class="comment-mid-box">
-          <p>{{ comment.body }}</p>
+        <div class="comment-right-box">
+          <div class="comment-top-box">
+            <p>{{ comment.username }} · Posted on {{ comment.created }}</p>
+          </div>
+          <div class="comment-mid-box">
+            <p>{{ comment.body }}</p>
+          </div>
+          <div class="comment-bottom-box">
+            <p>like and dislike section will go here</p>
+          </div>
         </div>
-        <div class="comment-bottom-box">
-          <p>like and dislike section will go here</p>
-        </div>
+      </div>
       {% endfor %}
     </div>
   {% endblock %}

@@ -4,6 +4,7 @@ from flask import Flask
 from flask_smorest import Api
 from flask import session
 from flask_session import Session
+from flask_fontawesome import FontAwesome
 
 from db import mysql
 
@@ -46,7 +47,8 @@ def create_app(db_url=None):
 
     #initializing session manager to flask app
     Session(app)
-
+    #configuring FontAwesome library to flask app
+    fa = FontAwesome(app)
 
     api.register_blueprint(MovieBlueprint)
     api.register_blueprint(ShowBlueprint)

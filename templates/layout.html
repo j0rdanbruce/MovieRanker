@@ -7,67 +7,104 @@
     <title>Document</title>
 </head>
 <style>
-    div.title{
-        position: sticky;
-        text-align: center;
-        border-radius: 10px;
-    }
     div.top-navbar{
         background-color: rgb(33, 134, 223);
-        position: -webkit-sticky;
-        position: sticky;
         height: 50px;
+        width: 100%;
+        position: fixed;
+        top: 0px;
+        z-index: 2;
     }
-    .top-navbar li{
-        display: inline-block;
-        text-align: center;
+    div.top-navbar ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
     }
-    .top-navbar a{
-        color: white;
-    }
-    #left-link{
+    div.top-navbar li{
+        height: 100%;
         position: relative;
-        left: -100px;
+        float: left;
     }
-    #settings-link{
+    li#left-link{
         position: relative;
-        left: 1500px;
-        width: 200%;
-        height: 50%;
+        left: 10px;
+    }
+    li#settings-link{
+        position: relative;
+        top: -6px;
+        right: 127px;
+        float: right;
+    }
+    #settings-link a{
         font-size: 30px;
     }
     #right-link{
+        float: right;
         position: relative;
-        left: 1540px;
-        width: auto;
+        right: 0;
+    }
+    .top-navbar a{
+        text-decoration: none;
+        display: block;
+        height: 100%;
+        padding: 8px;
+        padding-top: 13px;
+        color: white;
+        font-size: 20px;
+        text-align: center;
+    }
+    .top-navbar a:hover{
+        background-color: rgb(19, 77, 127);
+    }
+    div.title{
+        border-radius: 10px;
+        position: relative;
+        top: 70px;
+        text-align: center;
     }
     .side-navbar{
         background-color: lightgray;
+        position: fixed;
         width: 200px;
+        height: auto;
         /*height: 200px;*/
         border-radius: 10px;
     }
-    div.side-navbar li{
-        display: block;
-    }
-    li a{
-        text-decoration: none;
-        display: block;
-        padding-top: 10px;
-        padding-bottom: 10px;
+    .side-navbar ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
         width: 200px;
     }
-    li a:hover {
-        background-color: #555;
-        color: white;
+    div.side-navbar li a{
+        text-decoration: none;
+        display: block;
+        padding: 8px 16px;
     }
+    div.side-navbar li a:hover{
+        background-color: rgb(132, 131, 131);
+        border-radius: 10px;
+    }
+    /*div.main-content-backdrop{
+        background-color: rgb(137, 151, 166);
+        height: 100%;
+        width: 1000px;
+        position: fixed;
+        top: 200px;
+        left: 400px;
+    }*/
     .main-content{
         background-color: rgb(137, 151, 166);
-        width: 900px;
-        height: 900px;
+        width: 950px;
+        min-height: 100%;
+        height: auto;
         margin: auto;
-        position: relative;
-        top: -100px;
+        position: absolute;
+        top: 200px;
+        left: 400px;
+        padding-left: 50px;
+        padding-bottom: 50px;
     }
 </style>
 <script>
@@ -75,46 +112,43 @@
 </script>
 
 <body>
-    <div class="container">
-        {% block nav_bar %}
-        <div class="top-navbar">
-            <ul>
-                <li><a id="left-link" href="{{ url_for('other.showIndex') }}">Home</a></li>
-                {% if "id" in session %}
-                  <li><a id="settings-link" href="{{ url_for('user.edit_info') }}">&#9881;</a></li>
-                  <li><a id="right-link" href="{{ url_for('user.logout') }}">Sign out</a></li>
-                {% else %}
-                  <li><a id="right-link" href="{{ url_for('user.login') }}">Login | Sign Up</a></li>
-                {% endif %} 
-            </ul>
-        </div>
-        <div class="title">
-            <h1>Movie Ranker</h1>
-        </div>
-        <div class="side-navbar">
-            <ul id="nav-links">
-                <li><a href="{{ url_for('movies.search_movie') }}">Search for Movies</a></li>
-                <li><a href="#">Search for Actors</a></li>
-                <li><a href="{{ url_for('forum.get_forums') }}">Public Movie Forum</a></li>
-                <li><a href="{{ url_for('forum.create_forum') }}">Add a Forum</a></li>
-                {% if "id" in session and "is_guest" not in session %}
-                  <li><a href="{{ url_for('movies.get_liked_movies') }}">My Favorite Movies</a></li>
-                {% endif %}
-                
-            </ul>
-        </div>
-        {% endblock %}
-
-        <div class="main-content">
-            {% block main_content %}
-            {% endblock %}
-        </div>
-
-        {% block footer %}
-        <div class="footer"></div>
+    {% block nav_bar %}
+    <div class="top-navbar">
+        <ul>
+            <li id="left-link"><a href="{{ url_for('other.showIndex') }}">Home</a></li>
+            {% if "id" in session %}
+                <li id="settings-link"><a href="{{ url_for('user.edit_info') }}">&#9881;</a></li>
+                <li id="right-link"><a href="{{ url_for('user.logout') }}">Sign out</a></li>
+            {% else %}
+                <li id="right-link"><a href="{{ url_for('user.login') }}">Login | Sign Up</a></li>
+            {% endif %} 
+        </ul>
+    </div>
+    <div class="title">
+        <h1>Movie Ranker</h1>
+    </div>
+    <div class="side-navbar">
+        <ul id="nav-links">
+            <li><a href="{{ url_for('movies.search_movie') }}">Search for Movies</a></li>
+            <li><a href="#">Search for Actors</a></li>
+            <li><a href="{{ url_for('forum.get_forums') }}">Public Movie Forum</a></li>
+            <li><a href="{{ url_for('forum.create_forum') }}">Add a Forum</a></li>
+            {% if "id" in session and "is_guest" not in session %}
+                <li><a href="{{ url_for('movies.get_liked_movies') }}">My Favorite Movies</a></li>
+            {% endif %}
+            
+        </ul>
+    </div>
+    {% endblock %}
+    <div class="main-content-backdrop"></div>
+    <div class="main-content">
+        {% block main_content %}
         {% endblock %}
     </div>
-    
+
+    {% block footer %}
+    <div class="footer"></div>
+    {% endblock %}
     
 </body>
 </html>

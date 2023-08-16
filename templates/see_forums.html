@@ -70,6 +70,13 @@
     transform: scale(1, -1);
     /*end code for flipped image*/
   }
+  .right-box{
+    padding-left: 7px;
+  }
+  p.comment{
+    position: absolute;
+    bottom: 0px;
+  }
   p.comment > a{
     text-decoration: none;
   }
@@ -92,9 +99,9 @@
           <div class="down-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="downvote">&#8679;</a></div>
         </div>
         <div class="right-box">
-          <h3>{{ forum.title }} : {{ forum.id }}</h3>
+          <h3>{{ forum.title }}</h3>
           <p>{{ forum.body }}</p>
-          <p class="comment"><a href="{{ url_for('comment.comments', forum_id=forum.id) }}"># comments</a></p>
+          <p class="comment"><a href="{{ url_for('comment.comments', forum_id=forum.id) }}">{{ forum.no_comments }} comment(s)</a></p>
         </div>
       </div>
       <br>

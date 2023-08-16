@@ -18,7 +18,7 @@ class Forum():
             return result
 
     def get_all_forums(self) -> list[dict]:
-        query = "select id, title, body, upvote - downvote as votes from Forum ORDER BY votes DESC LIMIT 50"
+        query = "select Forum.id, Forum.title, Forum.body, upvote - downvote as votes, coalesce(count(Comment.body), 0) as no_comments from Forum left join Comment on Forum.id=Comment.forum_id group by id order by votes DESC LIMIT 50"
         result = self.cursor.get_all_rows(query)
         if result:
             return result
