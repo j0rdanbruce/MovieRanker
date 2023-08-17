@@ -123,6 +123,18 @@
     function addMovie(element){
         var movieId = element.getAttribute("data-movie-btn-id");
         var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+            if (this.readyState==4 && this.status==200){
+                var response = this.responseText;
+                if (response == "success"){
+                    var movieSuccessMessage = document.getElementById("add-movie-success");
+                    movieSuccessMessage.style.display = "block";
+                }
+                if (response == "exists"){
+                    var movieExistsMessage = document.getElementById("add-movie-exists");
+                    movieExistsMessage.style.display = "block";
+                }
+        }};
         xhttp.open("POST", "{{ url_for('movies.add_movies') }}", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("movie_id="+movieId);

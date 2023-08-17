@@ -86,6 +86,60 @@
         background-color: rgb(132, 131, 131);
         border-radius: 10px;
     }
+    .alert-message-box{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        position: fixed;
+        top: 130px;
+        left: 500px;
+        height: 80px;
+        width: 800px;
+        z-index: 2;
+    }
+    .alert-message-box div{
+        position: relative;
+        padding: 0;
+        margin: 0;
+        height: 30px;
+        width: 100%;
+    }
+    .alert-message-box div p{
+        text-align: center;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        top: 5px;
+    }
+    #close-btn{
+        all: unset;
+        cursor: pointer;
+        text-align: end;
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        top: 7px;
+        right: 8px;
+    }
+    #close-btn:hover{
+        font-weight: bold;
+        font-size: larger;
+    }
+    #add-movie-success{
+        display: none;
+        background-color: green;
+        border-radius: 8px;
+    }
+    #add-movie-failure{
+        display: none;
+        background-color: red;
+        border-radius: 8px;
+    }
+    #add-movie-exists{
+        display: none;
+        background-color: orange;
+        border-radius: 8px;
+    }
     /*div.main-content-backdrop{
         background-color: rgb(137, 151, 166);
         height: 100%;
@@ -101,14 +155,17 @@
         height: auto;
         margin: auto;
         position: absolute;
-        top: 200px;
+        top: 210px;
         left: 400px;
         padding-left: 50px;
         padding-bottom: 50px;
     }
 </style>
 <script>
-
+    function closeBtn(element){
+        const alertBox = element.parentElement;
+        alertBox.style.display = "none";
+    }
 </script>
 
 <body>
@@ -140,7 +197,11 @@
         </ul>
     </div>
     {% endblock %}
-    <div class="main-content-backdrop"></div>
+    <div class="alert-message-box">
+        <div id="add-movie-success" data-display-state="closed"><p>Movie has been added to your Fave Movie List!</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="add-movie-failure" data-display-state="closed"><p>Movie has not been added to your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="add-movie-exists" data-display-state="closed"><p>Movie is already in your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+    </div>
     <div class="main-content">
         {% block main_content %}
         {% endblock %}
