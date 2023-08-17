@@ -13,16 +13,35 @@
     let answer = confirm("Are you sure you want to remove this movie from your list?")
     return answer;
   }
+  function dropDownCard(element){
+        var movieCardRightBox = element.parentElement;
+        var movieCard = movieCardRightBox.parentElement;
+        var moviePlotBox = document.getElementById("movie-plot");
+        var infoBtn = element;
+        var cardStatus = movieCard.dataset.movieCardStatus;
+        if (cardStatus == "closed"){
+            movieCard.dataset.movieCardStatus = "open";
+            movieCardRightBox.style.height = "auto";
+            movieCard.style.height = "auto";
+            infoBtn.innerHTML = "Close Info &#9650;";
+        }else{
+            movieCard.dataset.movieCardStatus = "closed";
+            movieCard.style.height = "400px";
+            infoBtn.innerHTML = "More Info &#9660;";
+        }
+    }
 </script>
 
 <style>
-  div.movie-content{
+  div.movie-card{
+    border-style: solid;
     display: flex;
     flex-direction: row;
-    border-style: solid;
     border-radius: 5px;
-    width: 800px;
-    height: 150px;
+    position: relative;
+    width: 860px;
+    height: 170px;
+    margin-bottom: 10px;
   }
   div.movie-rank-box{
     background-color: rgb(33, 134, 223);
@@ -30,16 +49,51 @@
   }
   p.movie-rank-num{
     font-size: 25px;
+    text-align: center;
   }
-  div.movie-image-box > img{
-    width: 110%;
-    height: auto;
+  #change-rank-btn{
+    cursor: pointer;
+  }
+  img#movie-thumbnail{
+    border-style: solid;
+    position: relative;
+    margin: 0;
+    padding: 0;
+    width: 270px;
+  }
+  .movie-card-right-box{
+    background-color: aliceblue;
+    position: relative;
+    margin: 0;
+    top: 0;
+    padding: 6px;
+  }
+  .movie-card-right-box h3{
+    position: relative;
+    margin: 0;
+    padding-bottom: 5px;
+  }
+  #movie-plot{
+    border-style: solid;
+    border-width: thin;
+    position: relative;
+    height: 95px;
+    margin: 0;
+    overflow: scroll;
+  }
+  #info-dropdown-btn{
+    all: unset;
+    cursor: pointer;
+    position: relative;
+    width: auto;
+    bottom: 0px;
   }
   form#movie-submit-btn{
     background-color: rgb(223, 37, 37);
   }
   form#movie-submit-btn > button{
     height: 100%;
+    cursor: pointer;
   }
 </style>
 
@@ -53,7 +107,7 @@
   {% block main_content %}
     <h2>Favorite Movies:</h2>
     {% for movie in movies %}
-      <div class="movie-content">
+      <div class="movie-card" data-movie-card-status="closed">
         <div class="movie-rank-box">
           <p class="movie-rank-num"><strong>{{ movie.movie_rank }}</strong></p>
           <form action="{{ url_for('movies.change_rank', movie_id=movie.movie_id, current_rank=movie.movie_rank) }}" method="post">
@@ -63,16 +117,15 @@
                 <option value="{{ rank }}">{{rank}}</option>
               {% endfor %}
             </select>
-            <button type="submit">Change <br>Rank</button>
+            <button id="change-rank-btn" type="submit">Change <br>Rank</button>
           </form>
         </div>
-        <div class="movie-image-box">
-          <img src="{{ movie.pic_url }}" alt="Missing movie image">
+        <img id="movie-thumbnail" src="{{ movie.pic_url }}" alt="Missing movie image">
+        <div class="movie-card-right-box">
+          <h3>{{ movie.title }}</h3>
+          <p id="movie-plot">{{ movie.plot }}</p>
+          <button id="info-dropdown-btn" onclick="dropDownCard(this)"><strong>More Info &#9660;</strong></button>
         </div>
-        <ul>
-          <li>{{ movie.title }}</li>
-          <li>{{ movie.plot }}</li>
-        </ul>
         <form id="movie-submit-btn" method="post" action="{{ url_for('movies.get_liked_movies') }}">
           <button type="submit" name="movie_id" value="{{ movie.movie_id }}" onclick="return confWindow()" style="background-color: rgb(223, 37, 37);"><i style="font-size:30px" class="fa">&#xf014;</i></button>
         </form>

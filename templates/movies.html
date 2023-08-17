@@ -68,14 +68,14 @@
     #add-movie-btn:hover{
         cursor: pointer;
         font-size: 32px;
-        background-color: green;
+        background-color: rgb(247, 183, 55);
     }
     .message-box{
         display: none;
         position: fixed;
         top: 70px;
         right: 50px;
-        background-color: rgb(194, 144, 36);
+        background-color: rgb(247, 183, 55);
         height: 100px;
         width: 300px;
         border-radius: 5px;
@@ -168,43 +168,22 @@
     {% if movies %}
         <h1>Movie List:</h1>
         <div class="movie-content-container">
-            {% if 'is_guest' not in session %}
-                {% for movie in movies %}
-                    <div class="movie-card" data-movie-card-id="{{ movie.id }}" data-movie-card-status="closed">
-                        <span class="movie-card-top-box">
-                            <p id="movie-title"><strong>{{ movie.title }}</strong></p>
+            {% for movie in movies %}
+                <div class="movie-card" data-movie-card-id="{{ movie.id }}" data-movie-card-status="closed">
+                    <span class="movie-card-top-box">
+                        <p id="movie-title"><strong>{{ movie.title }}</strong></p>
+                        {% if 'is_guest' not in session %}
                             <button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}"><strong>+</strong>
                                 <div class="message-box"><p>Add this movie to your Favorite Movie List?</p></div>
                             </button>
-                        </span>
-                        <img src="{{ movie.img_src }}" alt="missing movie image" id="movie-thumbnail">
-                        <p id="movie-plot">{{ movie.plot }}</p>
-                        <br>
-                        <button href="#" id="info-dropdown-btn" onclick="dropDownCard(this)"><strong>More Info &#9660;</strong></button>
-                    </div>
-                {% endfor %}
-
-
-
-
-
-            {% else %}
-                <table class="movie-title-head">
-                    <tr>
-                        <th>Movie Thumbnail</th>
-                        <th>Movie Title</th>
-                        <th>Plot</th>
-                        <th>Add to My List</th>
-                    </tr>
-                    {% for movie in movies %}
-                        <tr>
-                            <td><img src="{{movie.img_src}}" alt="Missing movie image"></td>
-                            <td>{{movie.title}}</td>
-                            <td>{{movie.plot}}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
+                        {% endif %}
+                    </span>
+                    <img src="{{ movie.img_src }}" alt="missing movie image" id="movie-thumbnail">
+                    <p id="movie-plot">{{ movie.plot }}</p>
+                    <br>
+                    <button href="#" id="info-dropdown-btn" onclick="dropDownCard(this)"><strong>More Info &#9660;</strong></button>
+                </div>
+            {% endfor %}
         </div>
     {% endif %}
     {% endblock %}
