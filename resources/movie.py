@@ -50,15 +50,14 @@ class Movie(MethodView):
 #function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
 @login_required
-@sub_user_required
 def add_movies():
     if request.method == "POST":
         user = User(int(session["id"]))
         movie_id = int(request.form.get("movie_id"))
-        user.movie.add_movie(movie_id=movie_id)
-        return {"message": "successfully added movie to my movie list"}
+        response = user.movie.add_movie(movie_id=movie_id)
+        return response
     else:
-        return {"message": "unsuccessful attempt"}
+        return "failure"
 
 #endpoint for searching movies
 @blp.route("/search/movie", methods=["POST", "GET"])

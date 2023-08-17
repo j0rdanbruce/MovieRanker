@@ -30,7 +30,10 @@ class Movie():
         else:
             pass
     
-    def add_movie(self, movie_id: int) -> None:
+    def add_movie(self, movie_id: int) -> str:
+        if "is_guest" in session:
+            return "not subbed"
+        message = "success"
         movie_data = self.tmdb_api.get_movie_data(movie_id)
         image_url = "https://image.tmdb.org/t/p/w400" + movie_data["backdrop_path"]
         query_1 = "INSERT INTO Movie(id, title, pic_url, plot) VALUES(%s, %s, %s, %s)"
@@ -44,7 +47,8 @@ class Movie():
         try:
             self.cursor.insert(query_2, (int(session["id"]), int(movie_data["id"]), lowest_rank))
         except MySQLdb.IntegrityError:
-            pass
+            message = "exists"
+        return message
 
     def remove_movie(self, movie_id: int) -> None:
         movie_rank = int(self.cursor.get_row("SELECT movie_rank FROM Likes_Movie WHERE user_id={} AND movie_id={}".format(int(session["id"]), int(movie_id)))["movie_rank"])
