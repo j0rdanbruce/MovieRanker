@@ -136,7 +136,8 @@
                     var movieSubbedMessage = document.getElementById("add-movie-users-only");
                     movieSubbedMessage.style.display = "block";
                 }else{
-
+                    var failedMovieBox = document.getElementById("add-movie-failure");
+                    failedMovieBox.style.display = "block";
                 }
         }};
         xhttp.open("POST", "{{ url_for('movies.add_movies') }}", true);

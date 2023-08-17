@@ -145,6 +145,11 @@
         background-color: orange;
         border-radius: 8px;
     }
+    #del-movie-success{
+        display: none;
+        background-color: green;
+        border-radius: 8px;
+    }
     /*div.main-content-backdrop{
         background-color: rgb(137, 151, 166);
         height: 100%;
@@ -207,6 +212,7 @@
         <div id="add-movie-success" data-display-state="closed"><p>Movie has been added to your Fave Movie List!</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
         <div id="add-movie-failure" data-display-state="closed"><p>Movie has not been added to your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
         <div id="add-movie-exists" data-display-state="closed"><p>Movie is already in your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="del-movie-success" data-display-state="closed"><p>Movie has been removed from your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
     </div>
     <div class="main-content">
         {% block main_content %}

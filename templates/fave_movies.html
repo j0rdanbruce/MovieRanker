@@ -11,7 +11,18 @@
 <script>
   function confWindow(){
     let answer = confirm("Are you sure you want to remove this movie from your list?")
+    if (answer){
+      sessionStorage.setItem("message state", "closed");
+    }
     return answer;
+  }
+  window.onload = function(){
+    const messageState = sessionStorage.getItem("message state");
+    if (messageState == "closed"){
+      const delMessageBox = document.getElementById("del-movie-success");
+      delMessageBox.style.display = "block";
+      sessionStorage.removeItem("message state");
+    }
   }
   function dropDownCard(element){
         var movieCardRightBox = element.parentElement;
