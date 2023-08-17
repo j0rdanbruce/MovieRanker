@@ -50,7 +50,6 @@ class Movie(MethodView):
 #function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
 @login_required
-@sub_user_required
 def add_movies():
     if request.method == "POST":
         user = User(int(session["id"]))

@@ -125,6 +125,11 @@
         font-weight: bold;
         font-size: larger;
     }
+    #add-movie-users-only{
+        display: none;
+        background-color: orange;
+        border-radius: 8px;
+    }
     #add-movie-success{
         display: none;
         background-color: green;
@@ -198,6 +203,7 @@
     </div>
     {% endblock %}
     <div class="alert-message-box">
+        <div id="add-movie-users-only" data-display-state="closed"><p>Only <strong>Subscribed Users</strong> can Add to their Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
         <div id="add-movie-success" data-display-state="closed"><p>Movie has been added to your Fave Movie List!</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
         <div id="add-movie-failure" data-display-state="closed"><p>Movie has not been added to your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
         <div id="add-movie-exists" data-display-state="closed"><p>Movie is already in your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>

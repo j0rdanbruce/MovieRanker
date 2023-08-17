@@ -31,6 +31,8 @@ class Movie():
             pass
     
     def add_movie(self, movie_id: int) -> str:
+        if "is_guest" in session:
+            return "not subbed"
         message = "success"
         movie_data = self.tmdb_api.get_movie_data(movie_id)
         image_url = "https://image.tmdb.org/t/p/w400" + movie_data["backdrop_path"]

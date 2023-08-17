@@ -129,10 +129,14 @@
                 if (response == "success"){
                     var movieSuccessMessage = document.getElementById("add-movie-success");
                     movieSuccessMessage.style.display = "block";
-                }
-                if (response == "exists"){
+                }else if (response == "exists"){
                     var movieExistsMessage = document.getElementById("add-movie-exists");
                     movieExistsMessage.style.display = "block";
+                }else if (response == "not subbed"){
+                    var movieSubbedMessage = document.getElementById("add-movie-users-only");
+                    movieSubbedMessage.style.display = "block";
+                }else{
+
                 }
         }};
         xhttp.open("POST", "{{ url_for('movies.add_movies') }}", true);
@@ -184,11 +188,9 @@
                 <div class="movie-card" data-movie-card-id="{{ movie.id }}" data-movie-card-status="closed">
                     <span class="movie-card-top-box">
                         <p id="movie-title"><strong>{{ movie.title }}</strong></p>
-                        {% if 'is_guest' not in session %}
-                            <button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}"><strong>+</strong>
-                                <div class="message-box"><p>Add this movie to your Favorite Movie List?</p></div>
-                            </button>
-                        {% endif %}
+                        <button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}"><strong>+</strong>
+                            <div class="message-box"><p>Add this movie to your Favorite Movie List?</p></div>
+                        </button>
                     </span>
                     <img src="{{ movie.img_src }}" alt="missing movie image" id="movie-thumbnail">
                     <p id="movie-plot">{{ movie.plot }}</p>
