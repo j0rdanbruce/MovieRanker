@@ -127,11 +127,11 @@
             if (this.readyState==4 && this.status==200){
                 var response = this.responseText;
                 if (response == "success"){
-                    var movieSuccessMessage = document.getElementById("add-movie-success");
-                    movieSuccessMessage.style.display = "block";
+                    var message = "The movie has been added to your Fave Movie List!";
+                    showMessage(response, message);
                 }else if (response == "exists"){
-                    var movieExistsMessage = document.getElementById("add-movie-exists");
-                    movieExistsMessage.style.display = "block";
+                    var message = "This movie already exists in your Fave Movie List";
+                    showMessage(response, message);
                 }else if (response == "not subbed"){
                     var movieSubbedMessage = document.getElementById("add-movie-users-only");
                     movieSubbedMessage.style.display = "block";
