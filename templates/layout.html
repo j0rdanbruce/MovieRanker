@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='alertMessage.js') }}"></script>
 </head>
 <style>
     div.top-navbar{
@@ -103,6 +104,10 @@
         margin: 0;
         height: 30px;
         width: 100%;
+        /*transition animation goes here*/
+        opacity: 0;
+        transition: opacity 0.6s;
+        /*end transition section*/
     }
     .alert-message-box div p{
         text-align: center;
@@ -125,29 +130,19 @@
         font-weight: bold;
         font-size: larger;
     }
-    #add-movie-users-only{
+    #info-message{
         display: none;
         background-color: orange;
         border-radius: 8px;
     }
-    #add-movie-success{
+    #success-message{
         display: none;
         background-color: green;
         border-radius: 8px;
     }
-    #add-movie-failure{
+    #failure-message{
         display: none;
         background-color: red;
-        border-radius: 8px;
-    }
-    #add-movie-exists{
-        display: none;
-        background-color: orange;
-        border-radius: 8px;
-    }
-    #del-movie-success{
-        display: none;
-        background-color: green;
         border-radius: 8px;
     }
     /*div.main-content-backdrop{
@@ -172,10 +167,7 @@
     }
 </style>
 <script>
-    function closeBtn(element){
-        const alertBox = element.parentElement;
-        alertBox.style.display = "none";
-    }
+    
 </script>
 
 <body>
@@ -208,11 +200,9 @@
     </div>
     {% endblock %}
     <div class="alert-message-box">
-        <div id="add-movie-users-only" data-display-state="closed"><p>Only <strong>Subscribed Users</strong> can Add to their Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
-        <div id="add-movie-success" data-display-state="closed"><p>Movie has been added to your Fave Movie List!</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
-        <div id="add-movie-failure" data-display-state="closed"><p>Movie has not been added to your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
-        <div id="add-movie-exists" data-display-state="closed"><p>Movie is already in your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
-        <div id="del-movie-success" data-display-state="closed"><p>Movie has been removed from your Fave Movie List</p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="success-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="failure-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="info-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
     </div>
     <div class="main-content">
         {% block main_content %}

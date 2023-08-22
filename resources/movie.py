@@ -50,14 +50,13 @@ class Movie(MethodView):
 #function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
 @login_required
+@sub_user_required
 def add_movies():
     if request.method == "POST":
         user = User(int(session["id"]))
         movie_id = int(request.form.get("movie_id"))
         response = user.movie.add_movie(movie_id=movie_id)
         return response
-    else:
-        return "failure"
 
 #endpoint for searching movies
 @blp.route("/search/movie", methods=["POST", "GET"])
@@ -95,11 +94,17 @@ def get_liked_movies():
         movie_data = cur.get_all_rows(query)
         for rank in cur.get_all_rows(rank_query):
             rank_list.append(rank["movie_rank"])
-        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
+        if "alert_message" in session:
+            alert_message = session["alert_message"]
+            session.pop("alert_message")
+        else:
+            alert_message = None
+        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list, alert_message=alert_message)
     if request.method == "POST":
         movie_id = request.form.get("movie_id")
         user = User(int(session["id"]))
         user.movie.remove_movie(movie_id)
+        session["alert_message"] = "success"
         return redirect(url_for("movies.get_liked_movies"))
 
 @blp.route("/user/movie/movie_list/movie_id:<string:movie_id>&current_rank:<string:current_rank>/change_rank", methods=["POST"])
@@ -107,4 +112,6 @@ def change_rank(movie_id, current_rank):
     new_rank = int(request.form.get("rank"))
     user = User(int(session["id"]))
     user.movie.changeRank(int(movie_id), int(current_rank), int(new_rank))
+    session["alert_message"] = "success"
+    session["delete_message"] = "true"
     return redirect(url_for("movies.get_liked_movies"))
