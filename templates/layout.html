@@ -199,7 +199,11 @@
         </ul>
     </div>
     {% endblock %}
-    <div class="alert-message-box">
+    {% if alert_message is defined %}
+    <div class="alert-message-box" data-message-type="{{ alert_message.type }}" data-message="{{ alert_message.message }}">
+    {% else %}
+    <div class="alert-message-box" data-message-type="None" data-message="None">
+    {% endif %}
         <div id="success-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
         <div id="failure-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
         <div id="info-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>

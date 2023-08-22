@@ -9,18 +9,14 @@
 </head>
 
 <script type="text/javascript">
+  window.onload = function(){
+    showMsgAfterPageLoad();
+  };
+
   function confWindow(){
     let answer = confirm("Are you sure you want to remove this movie from your list?")
     return answer;
   }
-  window.onload = function(){
-    var message;
-    const titleBox = document.getElementById("page-title");
-    const messageType = titleBox.dataset.prevMessage;
-    if (messageType == "success"){
-      message = "You have successfully removed the movie form your fave movie list";
-      showMessage(messageType, message);
-  }};
   function dropDownCard(element){
         var movieCardRightBox = element.parentElement;
         var movieCard = movieCardRightBox.parentElement;
@@ -113,7 +109,7 @@
   {% endblock %}
 
   {% block main_content %}
-    <h2 id="page-title" data-prev-message="{{ alert_message }}">Favorite Movies:</h2>
+    <h2 id="page-title">Favorite Movies:</h2>
     {% for movie in movies %}
       <div class="movie-card" data-movie-card-status="closed">
         <div class="movie-rank-box">
