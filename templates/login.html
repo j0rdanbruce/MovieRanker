@@ -33,15 +33,9 @@
 </style>
 
 <script>
-  window.onload=function(){         //window.onload fixed my issue of console logging form data.
-    const form = document.querySelector('#login-form')
-      form.addEventListener('submit', event => {
-      event.preventDefault();
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData)
-      console.log(data);
-    });
-  }
+  window.onload = function(){
+    showMsgAfterPageLoad();
+  };
   
 </script>
 

@@ -50,9 +50,10 @@ class Movie(MethodView):
 #function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
 @login_required
-@sub_user_required
 def add_movies():
     if request.method == "POST":
+        if "is_guest" in session:
+            return "not subbed"
         user = User(int(session["id"]))
         movie_id = int(request.form.get("movie_id"))
         response = user.movie.add_movie(movie_id=movie_id)
@@ -79,6 +80,13 @@ def search_movie():
             }
             movie_list.append(movie_data)
         return render_template("movies.html", form=form, movies=movie_list)
+    message = request.args.get("login_message")
+    if message:
+        user = User(int(session["id"]))
+        alert_msg = {}
+        alert_msg["type"] = message
+        alert_msg["message"] = "Hello, {}!".format(user.username)
+        return render_template("movies.html", form=form, alert_message=alert_msg)
     return render_template("movies.html", form=form)
 
 #application endpoint for users to view their liked movie list
@@ -95,11 +103,14 @@ def get_liked_movies():
         for rank in cur.get_all_rows(rank_query):
             rank_list.append(rank["movie_rank"])
         if "alert_message" in session:
-            alert_message = session["alert_message"]
+            alert_msg = {}
+            alert_msg["type"] = session["alert_message"]
             session.pop("alert_message")
+            if alert_msg["type"] == "success":
+                alert_msg["message"] = "Movie removed from your Fave Movie List"
         else:
-            alert_message = None
-        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list, alert_message=alert_message)
+            return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
+        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list, alert_message=alert_msg)
     if request.method == "POST":
         movie_id = request.form.get("movie_id")
         user = User(int(session["id"]))

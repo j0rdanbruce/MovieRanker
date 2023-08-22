@@ -1,3 +1,4 @@
+from flask import request
 from flask_smorest import Blueprint
 from flask.views import MethodView
 from flask import render_template, flash, redirect, url_for, session
@@ -30,9 +31,15 @@ def login():
         user = User(email=form.email.data, pswrd=form.password.data)
         user.add_to_session()
         if user.is_authenticated():
-            return redirect(url_for("user.home_page"))
+            return redirect(url_for("movies.search_movie", login_message="success"))
         else:
             flash("Incorrect username or password")
+    message = request.args.get("logout_msg")
+    if message:
+        alert_msg = {}
+        alert_msg["type"] = message
+        alert_msg["message"] = "Come again soon!"
+        return render_template("login.html", form=form, alert_message=alert_msg)
     return render_template("login.html", form=form)
 
 #login as a guest user
@@ -76,7 +83,9 @@ def logout():
     session.pop("id")
     if "is_guest" in session:
         session.pop("is_guest")
-    flash("You were logged out successfully.", "success")
+    #flash("You were logged out successfully.", "success")
+    if "id" not in session:
+        return redirect(url_for("user.login", logout_msg="success"))
     return redirect(url_for("user.login"))
 
 #returns home page of the logged in user
