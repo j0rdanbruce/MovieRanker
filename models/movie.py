@@ -35,11 +35,17 @@ class Movie():
             return "not subbed"
         message = "success"
         movie_data = self.tmdb_api.get_movie_data(movie_id)
-        image_url = "https://image.tmdb.org/t/p/w400" + movie_data["backdrop_path"]
+        if movie_data["backdrop_path"]:
+            image_url = "https://image.tmdb.org/t/p/w400" + movie_data["backdrop_path"]
+        else: 
+            image_url =  None
         query_1 = "INSERT INTO Movie(id, title, pic_url, plot) VALUES(%s, %s, %s, %s)"
         query_2 = "INSERT INTO Likes_Movie(user_id, movie_id, movie_rank) VALUES(%s, %s, %s)"
-        lowest_rank = int(self.cursor.get_row("SELECT MAX(movie_rank) AS lowest_rank FROM Likes_Movie WHERE user_id={}".format(int(session["id"])))["lowest_rank"])
-        lowest_rank = lowest_rank + 1
+        try:        #getting the lowest ranking movie from Likes_Movie table
+            lowest_rank = int(self.cursor.get_row("SELECT MAX(movie_rank) AS lowest_rank FROM Likes_Movie WHERE user_id={}".format(int(session["id"])))["lowest_rank"])
+            lowest_rank = lowest_rank + 1
+        except TypeError:   #executes if there are no current movies in lieks movie. previous block will return NoneType from sql statement
+            lowest_rank = 1
         try:
             self.cursor.insert(query_1, (int(movie_data["id"]), movie_data["title"], image_url, movie_data["overview"]))
         except MySQLdb.IntegrityError:
