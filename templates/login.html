@@ -19,6 +19,29 @@
   .register-here a:hover{
     color: magenta;
   }
+  #register-link{
+    color: rgb(23, 87, 143);
+  }
+  .email-box > input{
+    border-style: none;
+    border-radius: 8px;
+    width: 200px;
+    height: 30px;
+    margin-bottom: 5px;
+  }
+  .pwrd-box > input{
+    border-style: none;
+    border-radius: 8px;
+    width: 200px;
+    height: 30px;
+    margin-bottom: 5px;
+  }
+  .login-btn > input{
+    border-radius: 8px;
+    width: 210px;
+    height: 35px;
+    cursor: pointer;
+  }
   div.guest-box{
     background-color: rgb(33, 134, 223);
     border-radius: 10px;
@@ -27,8 +50,11 @@
     margin: auto;
   }
   div.guest-box > a{
+    position: relative;
+    top: 15px;
     text-decoration: none;
     color: aliceblue;
+    text-align: center;
   }
 </style>
 
@@ -49,27 +75,27 @@
   {% block main_content %}
   <div class="register-box">
     <div class="register-here">
-      <h3><a href="{{ url_for('user.register') }}">Create another account here</a></h3>
+      <h3><a id="register-link" href="{{ url_for('user.register') }}">Create another account here</a></h3>
     </div>
     
     <form action="" method="post">
       {{ form.hidden_tag() }}
-      <div>
+      <div class="email-box">
         {{ form.email(placeholder='email') }}
         {% for error in form.email.errors %}
           <p>{{ error }}</p>
         {% endfor %}
       </div>
-      <div>
+      <div class="pwrd-box">
         {{ form.password(placeholder='password') }}
         {% for error in form.password.errors %}
           <p>{{ error }}</p>
         {% endfor %}
       </div>
-      <div>{{ form.submit() }}</div>
+      <div class="login-btn">{{ form.submit() }}</div>
       <p class="or-box"><span>OR</span></p>
       <div class="guest-box">
-        <a href="{{ url_for('user.login_guest') }}">Continue as Guest</a>
+        <a id="guest-login-btn" href="{{ url_for('user.login_guest') }}">Continue as Guest</a>
       </div>
       <br>
       {% for message in get_flashed_messages() %}

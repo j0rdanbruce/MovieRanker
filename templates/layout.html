@@ -174,7 +174,7 @@
     {% block nav_bar %}
     <div class="top-navbar">
         <ul>
-            <li id="left-link"><a href="{{ url_for('other.showIndex') }}">Home</a></li>
+            <li id="left-link"><a href="{{ url_for('movies.search_movie') }}">Home</a></li>
             {% if "id" in session %}
                 <li id="settings-link"><a href="{{ url_for('user.edit_info') }}">&#9881;</a></li>
                 <li id="right-link"><a href="{{ url_for('user.logout') }}">Sign out</a></li>
