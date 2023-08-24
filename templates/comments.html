@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Ranker</title>
+    {{ fontawesome_html() }}
+</head>
+
+<script type="text/javascript">
+  function upVote(element){
+    var voteType = element.getAttribute("data-vote-type");
+    var forumID = element.getAttribute("data-forum-id");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+      if (this.readyState==4 && this.status==200){
+        document.getElementById(forumID).innerHTML = this.responseText;
+    }};
+    xhttp.open("POST", "{{ url_for('forum.upVote') }}", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("forum_id="+forumID+"&vote_type="+voteType);
+  }
+  function like_comment(element){
+    var likeType = element.getAttribute("data-like-type");
+    var commentId = element.getAttribute("data-comment-id");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+      if (this.readyState==4 && this.status==200){
+        element.previousElementSibling.innerHTML = this.responseText;
+    }};
+    xhttp.open("POST", "{{ url_for('comment.like_comment') }}", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("comment_id="+commentId+"&like_type="+likeType);
+  }
+  function openCommentSctn(){
+    const btn = document.getElementById("comment-sctn");
+    const btnStyle = window.getComputedStyle(btn);
+    var dropDownBtn = document.getElementById("drop-down-btn");
+    if (btnStyle.display == "none"){
+      btn.style.display = "block";
+      dropDownBtn.innerHTML = "Close Comment &#9650;";
+    } else{
+      btn.style.display = "none";
+      dropDownBtn.innerHTML = "Open Comment &#9660;"
+    }
+  }
+</script>
+
+<style>
+  div.forum-box{
+    padding-top: 8px;
+    padding-left: 10px;
+    display: flex;
+    flex-direction: row;
+    height: auto;
+    width: 775px;
+    position: relative;
+  }
+  div.left-box{
+    background-color: rgb(33, 134, 223);
+    height: auto;
+    width: 20px;
+    position: relative;
+    top: 0px;
+    left: 0px;
+    padding-top: 20px;
+    padding-left: 7px;
+    padding-right: 7px;
+  }
+  div.left-box > div{
+    text-align: center;
+  }
+  div.down-arrow{
+    /*code for flipping the image*/
+    transform: scale(1, -1);
+    -moz-transform: scale(1, -1);
+    -webkit-transform: scale(1, -1);
+    -o-transform: scale(1, -1);
+    -ms-transform: scale(1, -1);
+    transform: scale(1, -1);
+    /*end code for flipped image*/
+  }
+  div.right-box{
+    background-color: aliceblue;
+    height: auto;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding-top: 20px;
+    padding-left: 8px;
+    padding-right: 10px;
+  }
+  p#username{
+    position: relative;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    color: rgb(100, 100, 123);
+    font-size: 15px;
+  }
+  div.right-box > h3{
+    position: relative;
+    margin-top: 5px;
+  }
+  p#forum-body{
+    position: relative;
+    margin-top: 0px;
+    padding-top: 0px;
+  }
+  div.comment-form{
+    display: none;
+    position: relative;
+  }
+  div.comment-form > form{
+    position: relative;
+    margin-left: 0px;
+    padding-left: 10px;
+  }
+  div.comment-body > input{
+    position: relative;
+    width: 500px;
+    height: 200px;
+    border-radius: 5px;
+  }
+  div.comment-submit-btn > input{
+    margin-bottom: 8px;
+    position: relative;
+    width: 507px;
+    height: 35px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  div.comment-submit-btn > input:hover{
+    font-size: large;
+    font-weight: bold;
+  }
+  button.comment-dropdown-btn{
+    height: 32px;
+    width: 50%;
+    margin: auto;
+    position: relative;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+  }
+  div.comments-sctn{
+    background-color: aliceblue;
+    position: relative;
+    height: 100%;
+    width: 775px;
+    bottom: 0px;
+    padding: 8px;
+    margin-top: 8px;
+  }
+  div.single-comment-box{
+    height: 170px;
+    display: flex;
+    flex-direction: row;
+    position: relative;
+  }
+  div.comment-left-box{
+    height: 100%;
+    width: 25px;
+    padding-top: 10px;
+    padding-right: 5px;
+    position: relative;
+    left: 0px;
+  }
+  #user-icon{
+    font-size: 25px;
+  }
+  div.comment-right-box{
+    height: 100%;
+    width: 750px;
+    position: relative;
+    right: 0px;
+  }
+  div.comments-sctn div{
+    margin-top: auto;
+    margin-bottom: 10px;
+  }
+  .comment-top-box{
+    height: 20px;
+    width: 730px;
+    padding-bottom: 5px;
+    position: absolute;
+    top: 0px;
+  }
+  div.comment-top-box p{
+    font-size: 14px;
+    color: rgb(100, 100, 123);
+  }
+  .comment-mid-box{
+    height: 90px;
+    width: 730px;
+    position: absolute;
+    top: 30px;
+  }
+  .comment-bottom-box{
+    width: 730px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    bottom: 0px;
+  }
+  .comment-bottom-box button{
+    cursor: pointer;
+    background-color: aliceblue;
+    border: none;
+    font-size: 16px;
+    position: relative;
+    top: 3px;
+  }
+  .comment-bottom-box div{
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+  }
+  .comment-bottom-box button:hover{
+    font-size: 20px;
+  }
+  .comment-bottom-box button:active{
+    font-size: 16px;
+  }
+</style>
+
+<body>
+  {% extends "layout.html" %}
+
+  {% block main_content %}
+    <div class="forum-box">
+      <div class="left-box">
+        <div class="up-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="upvote">&#8679;</a></div>
+        <div class="votes-box"><strong id="{{ forum.id }}">{{ forum.votes }}</strong></div>
+        <div class="down-arrow"><a href="#" style="text-decoration: none" onclick="upVote(this)" data-forum-id="{{ forum.id }}" data-vote-type="downvote">&#8679;</a></div>
+      </div>
+      <div class="right-box">
+        <p id="username">Posted by {{ forum.username }}</p>
+        <h3>{{ forum.title }}</h3>
+        <p id="forum-body">{{ forum.body }}</p>
+      </div>
+    </div>
+    <br>
+    <div class="comment-form" id="comment-sctn">
+      <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="comment-body">
+          {{ form.body(placeholder='Type your heart out!') }}
+          {% for error in form.body.errors %}
+            <p>{{ error }}</p>
+          {% endfor %}
+        </div>
+        <div class="comment-submit-btn">
+          {{ form.comment() }}
+        </div>
+      </form>
+    </div>
+    <button class="comment-dropdown-btn" id="drop-down-btn" style="font-size: 20px;" onclick="openCommentSctn()">Open Comment &#9660;</button>
+    <br>
+    <div class="comments-sctn">
+      {% for comment in comments %}
+      <div class="single-comment-box">
+        <div class="comment-left-box">
+          <i class="fas fa-user-circle" id="user-icon"></i>
+        </div>
+        <div class="comment-right-box">
+          <div class="comment-top-box">
+            <p>{{ comment.username }} · Posted on {{ comment.created }}</p>
+          </div>
+          <div class="comment-mid-box">
+            <p>{{ comment.body }}</p>
+          </div>
+          <div class="comment-bottom-box">
+            <div class="thumbs-up-box">
+              <p id="like-count">{{ comment.likes }}</p>
+              <button class="fas fa-thumbs-up" onclick="like_comment(this)" data-like-type="like" data-comment-id="{{ comment.id }}"></button>
+            </div>
+            <div class="thumbs-down-box">
+              <p id="dislike-count">{{ comment.dislikes }}</p>
+              <button class="fas fa-thumbs-down" onclick="like_comment(this)" data-like-type="dislike" data-comment-id="{{ comment.id }}"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  {% endblock %}
+</body>
+
+<footer></footer>
+
+</html>

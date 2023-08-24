@@ -1,5 +1,3 @@
-{% extends "layout.html" %}
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,35 +7,205 @@
     <title>Movie Ranker</title>
 </head>
 <style>
-    li{
-        margin-left: 45px;
+    form.movie-form{
+        position: relative;
+        top: 10px;
+        left: 200px;
+        display: inline-flex;
+    }
+    div.search-box > input{
+        height: 35px;
+        width: 400px;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+        font-size: 20px;
+    }
+    div.search-btn > input{
+        cursor: pointer;
+        height: 100%;
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
+    div.movie-content-container{
+        display: flex;
+        flex-wrap: wrap;
+    }
+    div.movie-card{
+        display: flex;
+        flex-direction: column;
+        background-color: aliceblue;
+        height: 400px;
+        width: 200px;
+        position: relative;
+        border-radius: 10px;
+        margin-left: 10px;
+        margin-bottom: 10px;
+    }
+    span.movie-card-top-box{
+        background-color: rgb(33, 134, 223);
+        width: 100%;
+        height: 55px;
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+        position: relative;
+        margin-top: 0px;
+    }
+    #movie-title{
+        height: 100%;
+        width: 170px;
+        position: relative;
+        text-align: center;
+    }
+    #add-movie-btn{
+        height: 100%;
+        width: 30px;
+        border-top-right-radius: 10px;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        font-size: 24px;
+    }
+    #add-movie-btn:hover{
+        cursor: pointer;
+        font-size: 32px;
+        background-color: rgb(247, 183, 55);
+    }
+    .message-box{
+        opacity: 0;
+        position: fixed;
+        top: 70px;
+        right: 50px;
+        background-color: rgb(247, 183, 55);
+        height: 100px;
+        width: 300px;
+        border-radius: 5px;
+        font-size: large;
+        text-align: center;
+        transition: opacity 1s;
+        z-index: 2;
+    }
+    #add-movie-btn:hover .message-box{
+        opacity: 0.8;
+    }
+    #movie-plot{
+        width: 100%;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
+        font-size: 15px;
+    }
+    img#movie-thumbnail{
+        background-color: aquamarine;
+        width: auto;
+        height: auto;
+        min-height: 120px;
+        position: relative;
+    }
+    #info-dropdown-btn{
+        all: unset;
+        cursor: pointer;
+        background-color: rgb(65, 97, 150);
+        height: 30px;
+        width: 100%;
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        position: absolute;
+        bottom: 0px;
+        text-align: center;
+        text-decoration: none;
+    }
+    #info-dropdown-btn:hover{
+        font-size: larger;
+    }
+    #info-dropdown-btn:active{
+        color: black;
     }
 </style>
-<script>
+<script type="text/javascript">
+    window.onload() = function(){
+        showMsgAfterPageLoad();
+    };
     
+    function addMovie(element){
+        var movieId = element.getAttribute("data-movie-btn-id");
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+            if (this.readyState==4 && this.status==200){
+                var response = this.responseText;
+                if (response == "success"){
+                    var message = "The movie has been added to your Fave Movie List!";
+                    showMessage(response, message);
+                }else if (response == "exists"){
+                    var message = "This movie already exists in your Fave Movie List";
+                    showMessage(response, message);
+                }else if (response == "not subbed"){
+                    var message = "You must be a Subscribed user to have a Fave Movie List";
+                    showMessage(response, message);
+                }else{
+                    var failedMovieBox = document.getElementById("add-movie-failure");
+                    failedMovieBox.style.display = "block";
+                }
+        }};
+        xhttp.open("POST", "{{ url_for('movies.add_movies') }}", true);
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.send("movie_id="+movieId);
+    }
+    function dropDownCard(element){
+        var movieCard = element.parentElement;
+        var infoBtn = element;
+        var cardStatus = movieCard.dataset.movieCardStatus;
+        if (cardStatus == "closed"){
+            movieCard.dataset.movieCardStatus = "open";
+            movieCard.style.height = "auto";
+            infoBtn.innerHTML = "Close Info &#9650;";
+        }else{
+            movieCard.dataset.movieCardStatus = "closed";
+            movieCard.style.height = "400px";
+            infoBtn.innerHTML = "More Info &#9660;";
+        }
+    }
 </script>
-<body>
+<body onload="showMsgAfterPageLoad()">
+    {% extends "layout.html" %}
+
     {% block nav_bar %}
         {{ super() }}
     {% endblock %}
+
     {% block main_content %}
-    <div>
+    <form class="movie-form" action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="search-box">
+        {{ form.title(placeholder='Movie Title') }}
+        {% for error in form.title.errors %}
+            <p>{{ error }}</p>
+        {% endfor %}
+        </div>
+        <div class="search-btn">{{ form.search() }}</div>
+        <br>
+        {% for message in get_flashed_messages() %}
+        <strong style="color: red;">{{ message }}</strong>
+        {% endfor %}
+    </form>
+    {% if movies %}
         <h1>Movie List:</h1>
-        {% block content %}
+        <div class="movie-content-container">
             {% for movie in movies %}
-            <form method="post" action="/picked_movies">
-                <ul>
-                    <h2>{{movie.title}}</h2>
-                    <li>{{movie.plot}}</li>
-                    <li>{{movie.id}}</li>
-                    <li><img src="{{movie.img_src}}" alt="Missing movie image"></li>
-                        <input type="checkbox" name="title" id="movie" value="{{movie.title}}">
-                </ul>
+                <div class="movie-card" data-movie-card-id="{{ movie.id }}" data-movie-card-status="closed">
+                    <span class="movie-card-top-box">
+                        <p id="movie-title"><strong>{{ movie.title }}</strong></p>
+                        <button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}"><strong>+</strong>
+                            <div class="message-box"><p>Add this movie to your Favorite Movie List?</p></div>
+                        </button>
+                    </span>
+                    <img src="{{ movie.img_src }}" alt="missing movie image" id="movie-thumbnail">
+                    <p id="movie-plot">{{ movie.plot }}</p>
+                    <br>
+                    <button href="#" id="info-dropdown-btn" onclick="dropDownCard(this)"><strong>More Info &#9660;</strong></button>
+                </div>
             {% endfor %}
-                <input type="submit" value="Add">  
-            </form>      
-        {% endblock %}
-    </div>
+        </div>
+    {% endif %}
     {% endblock %}
 </body>
 </html>

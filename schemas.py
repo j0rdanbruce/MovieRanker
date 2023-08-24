@@ -8,8 +8,9 @@ class PlainMovieSchema(Schema):
     #director = fields.Str(required=True)
     
 
-'''class MovieSchema(PlainMovieSchema):
-    movies = fields.List(fields.Nested(PlainMovieSchema(dump_only=True)))'''
-
-'''class MovieSchemaList(PlainMovieSchema):
-    '''
+class PlainUserSchema(Schema):
+    id = fields.Int(dump_only=True)
+    username = fields.Str(required=True)
+    email = fields.Str(required=True)
+    created = fields.DateTime(dump_only=True)
+    modified = fields.DateTime(dump_only=True)

@@ -3,3 +3,10 @@ flask-smorest
 python-dotenv
 sqlalchemy
 flask-sqlalchemy
+Flask-Login
+Flask-WTF
+flask_mysqldb
+Flask-Session
+gunicorn
+requests
+Flask-FontAwesome

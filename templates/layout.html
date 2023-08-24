@@ -5,70 +5,217 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <script type="text/javascript" src="{{ url_for('static', filename='alertMessage.js') }}"></script>
 </head>
 <style>
-    .flex-container{
-        display: flex;
-        flex-direction: row;
+    div.top-navbar{
+        background-color: rgb(33, 134, 223);
+        height: 50px;
+        width: 100%;
+        position: fixed;
+        top: 0px;
+        z-index: 2;
     }
-    #nav-links{
+    div.top-navbar ul{
         list-style-type: none;
-        padding: 10px;
-        margin: 0px;
-        margin-top: 30px;
-        border: solid black 3px;
-        border-radius: 10px;
-        width: 200px;
-        margin-left: 0px;
-        background-color: lightgray;
-    }
-    #top-navbar{
-        
-    }
-    li a{
-        text-decoration: none;
-        display: block;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        width: 200px;
-    }
-    li a:hover {
-        background-color: #555;
-        color: white;
-    }
-    #main-content{
-        width: 500;
-        float: left;
         margin: 0;
         padding: 0;
-        display: inline;     
+        overflow: hidden;
+    }
+    div.top-navbar li{
+        height: 100%;
+        position: relative;
+        float: left;
+    }
+    li#left-link{
+        position: relative;
+        left: 10px;
+    }
+    li#settings-link{
+        position: relative;
+        top: -6px;
+        right: 127px;
+        float: right;
+    }
+    #settings-link a{
+        font-size: 30px;
+    }
+    #right-link{
+        float: right;
+        position: relative;
+        right: 0;
+    }
+    .top-navbar a{
+        text-decoration: none;
+        display: block;
+        height: 100%;
+        padding: 8px;
+        padding-top: 13px;
+        color: white;
+        font-size: 20px;
+        text-align: center;
+    }
+    .top-navbar a:hover{
+        background-color: rgb(19, 77, 127);
+    }
+    div.title{
+        border-radius: 10px;
+        position: relative;
+        top: 70px;
+        text-align: center;
+    }
+    .side-navbar{
+        background-color: lightgray;
+        position: fixed;
+        width: 200px;
+        height: auto;
+        /*height: 200px;*/
+        border-radius: 10px;
+    }
+    .side-navbar ul{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 200px;
+    }
+    div.side-navbar li a{
+        text-decoration: none;
+        display: block;
+        padding: 8px 16px;
+    }
+    div.side-navbar li a:hover{
+        background-color: rgb(132, 131, 131);
+        border-radius: 10px;
+    }
+    .alert-message-box{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        position: fixed;
+        top: 130px;
+        left: 500px;
+        height: 80px;
+        width: 800px;
+        z-index: 2;
+    }
+    .alert-message-box div{
+        position: relative;
+        padding: 0;
+        margin: 0;
+        height: 30px;
+        width: 100%;
+        /*transition animation goes here*/
+        opacity: 0;
+        transition: opacity 0.6s;
+        /*end transition section*/
+    }
+    .alert-message-box div p{
+        text-align: center;
+        position: relative;
+        margin: 0;
+        padding: 0;
+        top: 5px;
+    }
+    #close-btn{
+        all: unset;
+        cursor: pointer;
+        text-align: end;
+        position: absolute;
+        margin: 0;
+        padding: 0;
+        top: 7px;
+        right: 8px;
+    }
+    #close-btn:hover{
+        font-weight: bold;
+        font-size: larger;
+    }
+    #info-message{
+        display: none;
+        background-color: orange;
+        border-radius: 8px;
+    }
+    #success-message{
+        display: none;
+        background-color: green;
+        border-radius: 8px;
+    }
+    #failure-message{
+        display: none;
+        background-color: red;
+        border-radius: 8px;
+    }
+    /*div.main-content-backdrop{
+        background-color: rgb(137, 151, 166);
+        height: 100%;
+        width: 1000px;
+        position: fixed;
+        top: 200px;
+        left: 400px;
+    }*/
+    .main-content{
+        background-color: rgb(137, 151, 166);
+        width: 950px;
+        min-height: 100%;
+        height: auto;
+        margin: auto;
+        position: absolute;
+        top: 210px;
+        left: 400px;
+        padding-left: 50px;
+        padding-bottom: 50px;
     }
 </style>
-<script></script>
+<script>
+    
+</script>
+
 <body>
-    <div class="flex-container">
-        {% block nav_bar %}
-        <div id="nav-bar">
-            <ul id="nav-links">
-                <li><a href="#">Search for Movies</a></li>
-                <li><a href="#">Search for Actors</a></li>
-                <li><a href="#">Public Movie Forum</a></li>
-            </ul>
-        </div>
-        <div id="top-navbar">
-            <ul>
-                <li><a href="#">Login</a></li>
-            </ul>
-        </div>
-        {% endblock %}
+    {% block nav_bar %}
+    <div class="top-navbar">
+        <ul>
+            <li id="left-link"><a href="{{ url_for('movies.search_movie') }}">Home</a></li>
+            {% if "id" in session %}
+                <li id="settings-link"><a href="{{ url_for('user.edit_info') }}">&#9881;</a></li>
+                <li id="right-link"><a href="{{ url_for('user.logout') }}">Sign out</a></li>
+            {% else %}
+                <li id="right-link"><a href="{{ url_for('user.login') }}">Login | Sign Up</a></li>
+            {% endif %} 
+        </ul>
+    </div>
+    <div class="title">
+        <h1>Movie Ranker</h1>
+    </div>
+    <div class="side-navbar">
+        <ul id="nav-links">
+            <li><a href="{{ url_for('movies.search_movie') }}">Search for Movies</a></li>
+            <li><a href="#">Search for Actors</a></li>
+            <li><a href="{{ url_for('forum.get_forums') }}">Public Movie Forum</a></li>
+            <li><a href="{{ url_for('forum.create_forum') }}">Add a Forum</a></li>
+            {% if "id" in session and "is_guest" not in session %}
+                <li><a href="{{ url_for('movies.get_liked_movies') }}">My Favorite Movies</a></li>
+            {% endif %}
+            
+        </ul>
+    </div>
+    {% endblock %}
+    {% if alert_message is defined %}
+    <div class="alert-message-box" data-message-type="{{ alert_message.type }}" data-message="{{ alert_message.message }}">
+    {% else %}
+    <div class="alert-message-box" data-message-type="None" data-message="None">
+    {% endif %}
+        <div id="success-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="failure-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+        <div id="info-message" data-display-state="closed"><p id="info-box"></p> <button id="close-btn" onclick="closeBtn(this)">X</button></div>
+    </div>
+    <div class="main-content">
         {% block main_content %}
-            <div id="main-content"></div>
-        {% endblock %}
-        {% block footer %}
-            <div class="footer"></div>
         {% endblock %}
     </div>
-    
+
+    {% block footer %}
+    <div class="footer"></div>
+    {% endblock %}
     
 </body>
 </html>
