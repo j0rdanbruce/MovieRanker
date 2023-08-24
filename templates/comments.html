@@ -21,6 +21,18 @@
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     xhttp.send("forum_id="+forumID+"&vote_type="+voteType);
   }
+  function like_comment(element){
+    var likeType = element.getAttribute("data-like-type");
+    var commentId = element.getAttribute("data-comment-id");
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function(){
+      if (this.readyState==4 && this.status==200){
+        element.previousElementSibling.innerHTML = this.responseText;
+    }};
+    xhttp.open("POST", "{{ url_for('comment.like_comment') }}", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("comment_id="+commentId+"&like_type="+likeType);
+  }
   function openCommentSctn(){
     const btn = document.getElementById("comment-sctn");
     const btnStyle = window.getComputedStyle(btn);
@@ -142,32 +154,75 @@
     margin-top: 8px;
   }
   div.single-comment-box{
+    height: 170px;
     display: flex;
     flex-direction: row;
     position: relative;
   }
   div.comment-left-box{
-    position: relative;
-    top: -78px;
-    left: 0px;
+    height: 100%;
+    width: 25px;
+    padding-top: 10px;
     padding-right: 5px;
+    position: relative;
+    left: 0px;
   }
   #user-icon{
     font-size: 25px;
   }
   div.comment-right-box{
-    position: relative;
     height: 100%;
-    top: 0px;
+    width: 750px;
+    position: relative;
     right: 0px;
   }
   div.comments-sctn div{
     margin-top: auto;
     margin-bottom: 10px;
   }
+  .comment-top-box{
+    height: 20px;
+    width: 730px;
+    padding-bottom: 5px;
+    position: absolute;
+    top: 0px;
+  }
   div.comment-top-box p{
     font-size: 14px;
     color: rgb(100, 100, 123);
+  }
+  .comment-mid-box{
+    height: 90px;
+    width: 730px;
+    position: absolute;
+    top: 30px;
+  }
+  .comment-bottom-box{
+    width: 730px;
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    bottom: 0px;
+  }
+  .comment-bottom-box button{
+    cursor: pointer;
+    background-color: aliceblue;
+    border: none;
+    font-size: 16px;
+    position: relative;
+    top: 3px;
+  }
+  .comment-bottom-box div{
+    display: flex;
+    flex-direction: row;
+    height: 40px;
+  }
+  .comment-bottom-box button:hover{
+    font-size: 20px;
+  }
+  .comment-bottom-box button:active{
+    font-size: 16px;
   }
 </style>
 
@@ -218,7 +273,14 @@
             <p>{{ comment.body }}</p>
           </div>
           <div class="comment-bottom-box">
-            <p>like and dislike section will go here</p>
+            <div class="thumbs-up-box">
+              <p id="like-count">{{ comment.likes }}</p>
+              <button class="fas fa-thumbs-up" onclick="like_comment(this)" data-like-type="like" data-comment-id="{{ comment.id }}"></button>
+            </div>
+            <div class="thumbs-down-box">
+              <p id="dislike-count">{{ comment.dislikes }}</p>
+              <button class="fas fa-thumbs-down" onclick="like_comment(this)" data-like-type="dislike" data-comment-id="{{ comment.id }}"></button>
+            </div>
           </div>
         </div>
       </div>
