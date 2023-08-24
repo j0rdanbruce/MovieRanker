@@ -25,3 +25,12 @@ def comments(forum_id):
 @login_required
 def make_comment():
     return redirect(url_for("comment.comments"))
+
+@blp.route("/forum/comments/like_comment", methods=["POST"])
+@login_required
+def like_comment():
+    user = User(int(session["id"]))
+    if request.method == "POST":
+        comment_id = int(request.form.get("comment_id"))
+        like_type = request.form.get("like_type")
+        return str(user.comment.like_comment(comment_id, like_type))
