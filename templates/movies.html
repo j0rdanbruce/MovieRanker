@@ -68,22 +68,24 @@
     #add-movie-btn:hover{
         cursor: pointer;
         font-size: 32px;
-        background-color: green;
+        background-color: rgb(247, 183, 55);
     }
     .message-box{
-        display: none;
+        opacity: 0;
         position: fixed;
         top: 70px;
         right: 50px;
-        background-color: rgb(194, 144, 36);
+        background-color: rgb(247, 183, 55);
         height: 100px;
         width: 300px;
         border-radius: 5px;
         font-size: large;
         text-align: center;
+        transition: opacity 1s;
+        z-index: 2;
     }
     #add-movie-btn:hover .message-box{
-        display: block;
+        opacity: 0.8;
     }
     #movie-plot{
         width: 100%;
@@ -120,9 +122,30 @@
     }
 </style>
 <script type="text/javascript">
+    window.onload() = function(){
+        showMsgAfterPageLoad();
+    };
+    
     function addMovie(element){
         var movieId = element.getAttribute("data-movie-btn-id");
         var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function(){
+            if (this.readyState==4 && this.status==200){
+                var response = this.responseText;
+                if (response == "success"){
+                    var message = "The movie has been added to your Fave Movie List!";
+                    showMessage(response, message);
+                }else if (response == "exists"){
+                    var message = "This movie already exists in your Fave Movie List";
+                    showMessage(response, message);
+                }else if (response == "not subbed"){
+                    var message = "You must be a Subscribed user to have a Fave Movie List";
+                    showMessage(response, message);
+                }else{
+                    var failedMovieBox = document.getElementById("add-movie-failure");
+                    failedMovieBox.style.display = "block";
+                }
+        }};
         xhttp.open("POST", "{{ url_for('movies.add_movies') }}", true);
         xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
         xhttp.send("movie_id="+movieId);
@@ -142,7 +165,7 @@
         }
     }
 </script>
-<body>
+<body onload="showMsgAfterPageLoad()">
     {% extends "layout.html" %}
 
     {% block nav_bar %}
@@ -150,7 +173,6 @@
     {% endblock %}
 
     {% block main_content %}
-    <div class="message-box"></div>
     <form class="movie-form" action="" method="post">
         {{ form.hidden_tag() }}
         <div class="search-box">
@@ -168,43 +190,20 @@
     {% if movies %}
         <h1>Movie List:</h1>
         <div class="movie-content-container">
-            {% if 'is_guest' not in session %}
-                {% for movie in movies %}
-                    <div class="movie-card" data-movie-card-id="{{ movie.id }}" data-movie-card-status="closed">
-                        <span class="movie-card-top-box">
-                            <p id="movie-title"><strong>{{ movie.title }}</strong></p>
-                            <button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}"><strong>+</strong>
-                                <div class="message-box"><p>Add this movie to your Favorite Movie List?</p></div>
-                            </button>
-                        </span>
-                        <img src="{{ movie.img_src }}" alt="missing movie image" id="movie-thumbnail">
-                        <p id="movie-plot">{{ movie.plot }}</p>
-                        <br>
-                        <button href="#" id="info-dropdown-btn" onclick="dropDownCard(this)"><strong>More Info &#9660;</strong></button>
-                    </div>
-                {% endfor %}
-
-
-
-
-
-            {% else %}
-                <table class="movie-title-head">
-                    <tr>
-                        <th>Movie Thumbnail</th>
-                        <th>Movie Title</th>
-                        <th>Plot</th>
-                        <th>Add to My List</th>
-                    </tr>
-                    {% for movie in movies %}
-                        <tr>
-                            <td><img src="{{movie.img_src}}" alt="Missing movie image"></td>
-                            <td>{{movie.title}}</td>
-                            <td>{{movie.plot}}</td>
-                        </tr>
-                    {% endfor %}
-                </table>
-            {% endif %}
+            {% for movie in movies %}
+                <div class="movie-card" data-movie-card-id="{{ movie.id }}" data-movie-card-status="closed">
+                    <span class="movie-card-top-box">
+                        <p id="movie-title"><strong>{{ movie.title }}</strong></p>
+                        <button id="add-movie-btn" onclick="addMovie(this)" data-movie-btn-id="{{movie.id}}"><strong>+</strong>
+                            <div class="message-box"><p>Add this movie to your Favorite Movie List?</p></div>
+                        </button>
+                    </span>
+                    <img src="{{ movie.img_src }}" alt="missing movie image" id="movie-thumbnail">
+                    <p id="movie-plot">{{ movie.plot }}</p>
+                    <br>
+                    <button href="#" id="info-dropdown-btn" onclick="dropDownCard(this)"><strong>More Info &#9660;</strong></button>
+                </div>
+            {% endfor %}
         </div>
     {% endif %}
     {% endblock %}

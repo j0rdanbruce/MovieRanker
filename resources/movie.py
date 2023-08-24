@@ -50,15 +50,14 @@ class Movie(MethodView):
 #function endpoint for adding movies to my fave movie list
 @blp.route("/picked_movies", methods=["POST"])
 @login_required
-@sub_user_required
 def add_movies():
     if request.method == "POST":
+        if "is_guest" in session:
+            return "not subbed"
         user = User(int(session["id"]))
         movie_id = int(request.form.get("movie_id"))
-        user.movie.add_movie(movie_id=movie_id)
-        return {"message": "successfully added movie to my movie list"}
-    else:
-        return {"message": "unsuccessful attempt"}
+        response = user.movie.add_movie(movie_id=movie_id)
+        return response
 
 #endpoint for searching movies
 @blp.route("/search/movie", methods=["POST", "GET"])
@@ -81,6 +80,13 @@ def search_movie():
             }
             movie_list.append(movie_data)
         return render_template("movies.html", form=form, movies=movie_list)
+    message = request.args.get("login_message")
+    if message:
+        user = User(int(session["id"]))
+        alert_msg = {}
+        alert_msg["type"] = message
+        alert_msg["message"] = "Hello, {}!".format(user.username)
+        return render_template("movies.html", form=form, alert_message=alert_msg)
     return render_template("movies.html", form=form)
 
 #application endpoint for users to view their liked movie list
@@ -96,11 +102,20 @@ def get_liked_movies():
         movie_data = cur.get_all_rows(query)
         for rank in cur.get_all_rows(rank_query):
             rank_list.append(rank["movie_rank"])
-        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
+        if "alert_message" in session:
+            alert_msg = {}
+            alert_msg["type"] = session["alert_message"]
+            session.pop("alert_message")
+            if alert_msg["type"] == "success":
+                alert_msg["message"] = "Movie removed from your Fave Movie List"
+        else:
+            return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
+        return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list, alert_message=alert_msg)
     if request.method == "POST":
         movie_id = request.form.get("movie_id")
         user = User(int(session["id"]))
         user.movie.remove_movie(movie_id)
+        session["alert_message"] = "success"
         return redirect(url_for("movies.get_liked_movies"))
 
 @blp.route("/user/movie/movie_list/movie_id:<string:movie_id>&current_rank:<string:current_rank>/change_rank", methods=["POST"])
@@ -108,4 +123,6 @@ def change_rank(movie_id, current_rank):
     new_rank = int(request.form.get("rank"))
     user = User(int(session["id"]))
     user.movie.changeRank(int(movie_id), int(current_rank), int(new_rank))
+    session["alert_message"] = "success"
+    session["delete_message"] = "true"
     return redirect(url_for("movies.get_liked_movies"))

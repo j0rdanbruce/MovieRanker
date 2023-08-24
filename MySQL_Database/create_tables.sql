@@ -56,3 +56,13 @@ create table if not exists Comment(
 );
 alter table Comment add column created datetime default(current_timestamp());
 alter table Comment add column modified datetime default(current_timestamp());
+
+create table if not exists Likes_Comment(
+    user_id int not null,
+	comment_id int not null,
+    created datetime default(current_timestamp()),
+    modified datetime default(current_timestamp()),
+    primary key(user_id, comment_id),
+    foreign key(comment_id) references Comment(id),
+    foreign key(user_id) references user(id)
+);
