@@ -155,7 +155,7 @@
     }*/
     .main-content{
         background-color: rgb(137, 151, 166);
-        width: 950px;
+        width: 50%;
         min-height: 100%;
         height: auto;
         margin: auto;
@@ -189,7 +189,6 @@
     <div class="side-navbar">
         <ul id="nav-links">
             <li><a href="{{ url_for('movies.search_movie') }}">Search for Movies</a></li>
-            <li><a href="#">Search for Actors</a></li>
             <li><a href="{{ url_for('forum.get_forums') }}">Public Movie Forum</a></li>
             <li><a href="{{ url_for('forum.create_forum') }}">Add a Forum</a></li>
             {% if "id" in session and "is_guest" not in session %}
