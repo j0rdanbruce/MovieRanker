@@ -56,7 +56,7 @@ def login_guest():
     cursor.close()'''
     session["id"] = 0
     session["is_guest"] = "active"
-    return redirect(url_for("user.home_page"))
+    return redirect(url_for("movies.search_movie"))
 
 @blp.route("/user/edit_info", methods=["GET", "POST"])
 @login_required
