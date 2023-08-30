@@ -96,6 +96,7 @@ def search_movie():
 def get_liked_movies():
     cur = Cursor()
     if request.method == "GET":
+        change_rank_alert_msg = request.args.get("message")
         query = "select title, pic_url, plot, movie_rank, movie_id from Likes_Movie AS LM, Movie where LM.movie_id = Movie.id AND LM.user_id ={} order by movie_rank ASC".format(int(session["id"]))
         rank_query = "select movie_rank from Likes_Movie where user_id={} order by movie_rank asc".format(int(session["id"]))
         rank_list = []
@@ -108,6 +109,10 @@ def get_liked_movies():
             session.pop("alert_message")
             if alert_msg["type"] == "success":
                 alert_msg["message"] = "Movie removed from your Fave Movie List"
+        elif change_rank_alert_msg:
+            alert_msg = {}
+            alert_msg["type"] = change_rank_alert_msg
+            alert_msg["message"] = "Movie Rank has been changed"
         else:
             return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list)
         return render_template("fave_movies.html", movies=movie_data, rank_list=rank_list, alert_message=alert_msg)
@@ -123,6 +128,4 @@ def change_rank(movie_id, current_rank):
     new_rank = int(request.form.get("rank"))
     user = User(int(session["id"]))
     user.movie.changeRank(int(movie_id), int(current_rank), int(new_rank))
-    session["alert_message"] = "success"
-    session["delete_message"] = "true"
-    return redirect(url_for("movies.get_liked_movies"))
+    return redirect(url_for("movies.get_liked_movies", message="success"))
