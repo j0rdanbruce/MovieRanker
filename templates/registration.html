@@ -6,22 +6,64 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+<style>
+  .page-title{
+    text-align: center;
+    margin-bottom: 17px;
+  }
+  .register-box{
+    background-color: gray;
+    border-radius: 20px;
+    width: 400px;
+    height: 310px;
+    margin: auto;
+    padding-top: 20px;
+    position: relative;
+  }
+  .register-form{
+    width: 50%;
+    height: auto;
+    margin: auto;
+    position: relative;
+  }
+  .register-form div > input{
+    border-style: none;
+    border-radius: 8px;
+    height: 30px;
+    width: 200px;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  #submit > input{
+    cursor: pointer;
+  }
+  .login-link{
+    text-align: center;
+  }
+</style>
 <body>
-  <h1>Create an Account</h1>
-  <form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div id="fname-field">{{ form.fname(placeholder='first name') }}</div>
-    <div id="lname-field">{{ form.lname(placeholder='last name') }}</div>
-    <div id="username-field">{{ form.username(placeholder='username') }}</div>
-    <div id="email-field">{{ form.email(placeholder='email') }}</div>
-    <div id="password-field">{{ form.password1(placeholder='password') }}</div>
-    <div id="confirm-password-field">{{ form.password2(placeholder='confirm password') }}</div>
-    <div id="submit">{{ form.submit() }}</div>
-  </form>
+  {% extends "layout.html" %}
+
+  {% block nav_bar %}
+    {{ super() }}
+  {% endblock %}
+
+  {% block main_content %}
+  <h2 class="page-title">Create an Account</h2>
+  <div class="register-box">
+    <form class="register-form" action="" method="post">
+      {{ form.hidden_tag() }}
+      <div id="fname-field">{{ form.fname(placeholder='first name') }}</div>
+      <div id="lname-field">{{ form.lname(placeholder='last name') }}</div>
+      <div id="username-field">{{ form.username(placeholder='username') }}</div>
+      <div id="email-field">{{ form.email(placeholder='email') }}</div>
+      <div id="password-field">{{ form.password1(placeholder='password') }}</div>
+      <div id="confirm-password-field">{{ form.password2(placeholder='confirm password') }}</div>
+      <div id="submit">{{ form.submit() }}</div>
+    </form>
+    <h3 class="login-link"><a href="{{ url_for('user.login') }}">Already have an account?</a></h3>
+  </div>
+  {% endblock %}
   
-<br>
-  <h3><a href="{{ url_for('user.login') }}">Already have an account?</a></h3>
-    
-  <div></div>
 </body>
 </html>
