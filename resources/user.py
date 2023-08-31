@@ -63,18 +63,24 @@ def login_guest():
 def edit_info():
     form = EditUserForm()
     if form.validate_on_submit():
+        alert_msg = {}
         user = User(int(session["id"]))
-        fname = form.fname.data if form.fname.data != "" else None
-        lname = form.lname.data if form.lname.data != "" else None
-        email = form.email.data if form.email.data != "" else None
-        username = form.username.data if form.username.data != "" else None
-        pwrd = form.password.data if form.password.data != "" else None
-        user.edit_info(fname, lname, email, username, pwrd)
-        flash("User info was changed successfully.")
-        #return redirect(url_for("user.login"))
+        try:
+            fname = form.fname.data if form.fname.data != "" else None
+            lname = form.lname.data if form.lname.data != "" else None
+            email = form.email.data if form.email.data != "" else None
+            username = form.username.data if form.username.data != "" else None
+            pwrd = form.password.data if form.password.data != "" else None
+            user.edit_info(fname, lname, email, username, pwrd)
+            alert_msg["type"] = "success"
+            alert_msg["message"] = "User info was updated successfully."
+            #return redirect(url_for("user.login"))
+        except:
+            alert_msg["type"] = "failure"
+            alert_msg["message"] = "User info was not updated."
+        return render_template("settings.html",form=form, alert_message=alert_msg)
     else:
-        flash("user info was not updated.")
-    return render_template("settings.html", form=form)
+        return render_template("settings.html", form=form)
 
 #logout of your account
 @blp.route("/logout", methods=["GET"])
