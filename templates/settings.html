@@ -5,10 +5,65 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Ranker</title>
+    {{ fontawesome_html() }}
 </head>
 <style>
-
+  .page-title{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .page-title h2{
+    margin-right: 7px;
+  }
+  #info-icon{
+    font-size: 22px;
+    cursor: pointer;
+  }
+  #info-icon:hover{
+    color: orange;
+    opacity: 0.8;
+  }
+  .edit-info-box{
+    display: none;
+    opacity: 0;
+    position: fixed;
+    top: 210px;
+    right: 100px;
+    background-color: rgb(247, 183, 55);
+    height: 100px;
+    width: 300px;
+    padding: 7px;
+    border-radius: 5px;
+    font-size: large;
+    text-align: center;
+    transition: opacity 0.8s 1s;
+    z-index: 2;
+  }
+  .edit-info-box p{
+    color: black;
+    font-size: 16px;
+    font-family: sans-serif;
+  }
+  #info-icon:hover .edit-info-box{
+    display: block;
+    opacity: 1;
+  }
+  .edit-settings tr td > input{ 
+    border-style: none;
+    border-radius: 8px;
+    height: 30px;
+    width: 200px;
+    margin-bottom: 5px;
+  }
+  .submit-box td > input{
+    cursor: pointer;
+  }
 </style>
+
+<script>
+  
+</script>
 
 <body>
   {% extends "layout.html" %}
@@ -18,28 +73,38 @@
   {% endblock %}
 
   {% block main_content %}
-  <h2>Edit user info:</h2>
+  <div class="page-title">
+    <h2>Edit user info:   </h2>
+    <i class="fa fa-info-circle" id="info-icon" aria-hidden="true">
+      <div class="edit-info-box">
+        <p>Any user ino that needs to be changed fill in the box. Any info that does <b>NOT</b> need to be changed leave the box <b>blank</b>.</p>
+      </div>
+    </i>
+  </div>
+  
   <div class="user-form">
-    <form action="" method="post">
+    <form class="edit-settings" action="" method="post">
       {{ form.hidden_tag() }}
-      <div class="fname-box">
-        <label for="fname">First Name:</label> {{ form.fname() }}
-      </div>
-      <div class="lname-box">
-        <label for="lname">Last Name:</label> {{ form.lname() }}
-      </div>
-      <div class="email-box">
-        <label for="email">Email:</label> {{ form.email() }}
-      </div>
-      <div class="username-box">
-        <label for="username">Username:</label> {{ form.username() }}
-      </div>
-      <div class="password-box">
-        <label for="password">Password:</label> {{ form.password() }}
-      </div>
-      <div class="submit-box">
-        {{ form.submit(placeholder='Submit') }}
-      </div>
+      <table>
+        <tr class="fname-box">
+          <td><label for="fname">First Name:</label</td> <td>{{ form.fname() }}</td>
+        </tr>
+        <tr class="lname-box">
+          <td><label for="lname">Last Name:</label></td> <td>{{ form.lname() }}</td>
+        </tr>
+        <tr class="email-box">
+          <td><label for="email">Email:</label></td> <td>{{ form.email() }}</td>
+        </tr>
+        <tr class="username-box">
+          <td><label for="username">Username:</label></td> <td>{{ form.username() }}</td>
+        </tr>
+        <tr class="password-box">
+          <td><label for="password">Password:</label></td> <td>{{ form.password() }}</td>
+        </tr>
+        <tr class="submit-box">
+          <td></td> <td>{{ form.submit(placeholder='Submit') }}</td>
+        </tr>
+      </table>
     </form>
     <br>
         {% for message in get_flashed_messages() %}
