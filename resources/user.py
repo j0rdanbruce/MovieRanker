@@ -27,16 +27,18 @@ def register():
 @blp.route("/login", methods=["POST", "GET"])
 def login():
     form = LoginForm()
+    alert_msg={}
     if form.validate_on_submit():
         user = User(email=form.email.data, pswrd=form.password.data)
         user.add_to_session()
         if user.is_authenticated():
             return redirect(url_for("movies.search_movie", login_message="success"))
         else:
-            flash("Incorrect username or password")
+            alert_msg["type"] = "failure"
+            alert_msg["message"] = "Email and/or password entered is incorrect. Please try again."
+            return render_template("login.html", form=form, alert_message=alert_msg)
     message = request.args.get("logout_msg")
     if message:
-        alert_msg = {}
         alert_msg["type"] = message
         alert_msg["message"] = "Come again soon!"
         return render_template("login.html", form=form, alert_message=alert_msg)

@@ -1,5 +1,5 @@
 from db import mysql, Cursor
-from flask import flash, session, render_template
+from flask import flash, session
 from  werkzeug.security import generate_password_hash, check_password_hash
 from forms import RegistrationForm
 
@@ -53,16 +53,12 @@ class User:
         if result:
             return result["username"]
     
-    def add_to_session(self) -> str:
+    def add_to_session(self):
         '''Adds the users unique integer \'id\' to the session.'''
-        cur = mysql.connection.cursor()
-        query = "SELECT * FROM user WHERE email='{}' AND pwrd_hash='{}'".format(self.email, self.pswrd)
-        cur.execute(query)
-        user = cur.fetchone()
-        cur.close()
-        if user:
-            session["id"] = user["id"]
-            return render_template("/home_page.html")
+        query = "SELECT id FROM user WHERE email='{}' AND pwrd_hash='{}'".format(self.email, self.pswrd)
+        result = self.cursor.get_row(query)
+        if result:
+            session["id"] = result["id"]
     
     def insert_user(self, fname: str, lname: str) -> None:
         '''Registers a new user's info to the database.'''
@@ -96,8 +92,8 @@ class User:
         cur.close()
         return True
     
-    def is_authenticated(self):
-        if session["id"] is not None:
+    def is_authenticated(self) -> str:
+        if "id" in session:
             return True
         else:
             return False
